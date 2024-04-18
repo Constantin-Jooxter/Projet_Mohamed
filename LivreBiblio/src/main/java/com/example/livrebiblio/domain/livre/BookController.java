@@ -2,6 +2,7 @@ package com.example.livrebiblio.domain.livre;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,15 +57,11 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Book>> searchBooks(@RequestParam(required = false) String isbn,
-                                                  @RequestParam(required = false) String auteur) throws BookNotFoundException {
-        List<Book> books = bookService.getBookingFilters(isbn, auteur);
+    public ResponseEntity<List<BookDTO>> searchBooks(@ParameterObject BookingFilters bookFilters) throws BookNotFoundException {
+        List<BookDTO> books = bookService.search(bookFilters);
         return ResponseEntity.ok().body(books);
-    }
-
-    @GetMapping("/AllBook/")
-    public ResponseEntity<List<BookDTO>> getAllBooks() throws BookNotFoundException {
-        return ResponseEntity.ok().body(bookService.getAllBooks());
+        //            String response = "Searching books with filters: " + filters.toString();
+        //          return ResponseEntity.ok().body(response);
     }
 }
 

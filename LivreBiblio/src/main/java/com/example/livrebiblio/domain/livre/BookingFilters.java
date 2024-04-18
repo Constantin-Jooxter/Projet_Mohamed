@@ -1,25 +1,26 @@
 package com.example.livrebiblio.domain.livre;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
-public class BookingFilters {
-   //private Long id;
+public class BookingFilters { //private Long id;
+
+    @Parameter(name = "isbn", description = "Search isbn")
     private String isbn;
+    @Parameter(name = "titre", description = "Search titre")
     private String titre;
+    @Parameter(name = "author", description = "Search author")
     private String auteur;
-    private String datePublication;
+    @Parameter(name = "Date Publication", description = "Search Date")
+    private Instant datePublication;
+    @Parameter(name = "Synopsis", description = "Resume of Story")
     private String synopsis;
 
-   /* public BookingFilters(Book book) {
-        this.isbn = book.getIsbn();
-        this.titre = book.getTitre();
-        this.auteur = book.getAuteur();
-        this.datePublication = book.getDatePublication();
-        this.synopsis = book.getSynopsis();
-    }*/
 }
 
 
