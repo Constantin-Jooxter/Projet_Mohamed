@@ -1,0 +1,9 @@
+package com.example.livrebiblio.domain.livre;
+
+public class BookNotFoundException extends Exception {
+    public BookNotFoundException(String message) {
+        super(message);
+    }
+}
+
+
