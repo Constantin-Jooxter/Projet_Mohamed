@@ -56,19 +56,12 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<BookingFilter> searchBooks(@RequestParam(required = false) String isbn,
-                                                     @RequestParam(required = false) String auteur) {
-        BookingFilter filter = bookService.searchBooks(isbn, auteur);
-        return ResponseEntity.ok().body(filter);
+    public ResponseEntity<List<Book>> searchBooks(@RequestParam(required = false) String isbn,
+                                                  @RequestParam(required = false) String auteur) throws BookNotFoundException {
+        List<Book> books = bookService.getBookingFilters(isbn, auteur);
+        return ResponseEntity.ok().body(books);
     }
 
-    // Renvoyer un objet, faire un booking filter
-
-    /*@GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam String isbn, @RequestParam String auteur) throws BookNotFoundException {
-        List<BookDTO> books = bookService.searchBooks(isbn, auteur);
-        return ResponseEntity.ok().body(books);
-    }*/
     @GetMapping("/AllBook/")
     public ResponseEntity<List<BookDTO>> getAllBooks() throws BookNotFoundException {
         return ResponseEntity.ok().body(bookService.getAllBooks());

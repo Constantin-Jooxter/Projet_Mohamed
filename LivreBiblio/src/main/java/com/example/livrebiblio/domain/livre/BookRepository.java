@@ -1,7 +1,7 @@
 package com.example.livrebiblio.domain.livre;
 
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,11 +12,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findBookByAuteur(String auteur);
 
-    // List<Book> searchBookByIsbnAndAuteur(String isbn, String auteur);
+    List<Book> findByIsbnAndAuteur(String isbn, String auteur);
 
     @NonNull
     List<Book> findAll();
-
-
 }
-

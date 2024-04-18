@@ -86,4 +86,13 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<Book> getBookingFilters(String isbn, String auteur) throws BookNotFoundException {
+        List<Book> books = bookRepository.findByIsbnAndAuteur(isbn, auteur);
+        if (!books.isEmpty()) {
+            return books;
+        } else {
+            throw new BookNotFoundException("Books not found with Author : " + auteur + " and ISBN : " + isbn);
+        }
+    }
 }
