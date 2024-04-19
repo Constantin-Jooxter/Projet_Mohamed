@@ -7,8 +7,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -160,4 +163,22 @@ public class BookServiceTest {
 
         verify(bookRepository).findById(nonExistingBookId);
     }
+
+    /*@Test
+    void should_return_books_with_filters_when_books_exist() throws BookNotFoundException {
+        // Arrange
+        BookingFilters bookingFilters = new BookingFilters("123", "Clean code", "Mohamed", , "TestSynopsis");
+        bookingFilters.setIsbn("123");
+
+        // Act
+        List<BookDTO> searchResults = bookService.search(bookingFilters);
+
+        // Assert
+        assertFalse(searchResults.isEmpty());
+
+        for (BookDTO bookDTO : searchResults) {
+            assertEquals("123", bookDTO.getIsbn());
+        }
+    }*/
+
 }

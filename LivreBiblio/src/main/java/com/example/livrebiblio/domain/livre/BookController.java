@@ -3,6 +3,7 @@ package com.example.livrebiblio.domain.livre;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,8 +61,13 @@ public class BookController {
     public ResponseEntity<List<BookDTO>> searchBooks(@ParameterObject BookingFilters bookFilters) throws BookNotFoundException {
         List<BookDTO> books = bookService.search(bookFilters);
         return ResponseEntity.ok().body(books);
-        //            String response = "Searching books with filters: " + filters.toString();
-        //          return ResponseEntity.ok().body(response);
     }
+
+  /*  @GetMapping("/search")
+    public ResponseEntity<Page<BookDTO>> searchBooks(@ParameterObject BookingFilters bookFilters, org.springframework.data.domain.Pageable pageable) throws BookNotFoundException {
+        Page<BookDTO> books = bookService.search(bookFilters, pageable);
+        return ResponseEntity.ok().body(books);
+    }*/
+
 }
 

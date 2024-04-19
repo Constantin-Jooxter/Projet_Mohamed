@@ -1,19 +1,15 @@
 package com.example.livrebiblio.domain.livre;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +17,7 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
 
     public BookDTO createBook(BookRequest bookRequest) {
         Book book = new Book();
@@ -86,31 +83,41 @@ public class BookService {
     }
 
     public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
-        Specification<Book> specification = (root, query, criteriaBuilder) -> {
-            List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
+        Specification<Book> specification = buildSpecification(bookingFilters);
+        List<BookDTO> books = bookRepository.findAll(specification).stream()
+                .map(BookMapper::convertToBookDTO)
+                .collect(Collectors.toList());
 
-            if (bookingFilters.getIsbn() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("isbn"), bookingFilters.getIsbn()));
-            }
-            if (bookingFilters.getAuteur() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("auteur"), bookingFilters.getAuteur()));
-            }
-            if (bookingFilters.getTitre() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("titre"), bookingFilters.getTitre()));
-            }
-            if (bookingFilters.getSynopsis() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("synopsis"), bookingFilters.getSynopsis()));
-            }
-            if (bookingFilters.getDatePublication() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("datePublication"), bookingFilters.getDatePublication()));
-            }
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("Book not found");
+        } else {
+            return books;
+        }
+    }
 
-            //patern builder --> me renseigner
+    public Specification<Book> buildSpecification(BookingFilters bookingFilters) {
 
-            return criteriaBuilder.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
-        };
+        return BookSpecificationBuilder.builder()
+                .withIsbn(bookingFilters.getIsbn())
+                .withTitre(bookingFilters.getTitre())
+                .withAuteur(bookingFilters.getAuteur())
+                .withDatePublication(bookingFilters.getDatePublication())
+                .withSynopsis(bookingFilters.getSynopsis())
+                .build();
+    }
+
+   /* public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
+        //Specification<Book> specification = BookSpecificationBuilder.builder()
+        Specification<Book> specification = BookSpecificationBuilder.builder(criteriaBuilder, root)
+                .withIsbn(bookingFilters.getIsbn())
+                .withAuteur(bookingFilters.getAuteur())
+                .withTitre(bookingFilters.getTitre())
+                .withSynopsis(bookingFilters.getSynopsis())
+                .withDatePublication(bookingFilters.getDatePublication())
+                .build();
 
         List<Book> books = bookRepository.findAll(specification);
+
         if (!books.isEmpty()) {
             return books.stream()
                     .map(BookMapper::convertToBookDTO)
@@ -118,5 +125,5 @@ public class BookService {
         } else {
             throw new BookNotFoundException("No books found.");
         }
-    }
+    }*/
 }
