@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 
 @Entity
 @Data
@@ -27,7 +29,7 @@ public class Book {
     private String auteur;
 
     @Column(nullable = false)
-    private String datePublication;
+    private Instant datePublication;
 
     @Column(nullable = false)
     private String synopsis;

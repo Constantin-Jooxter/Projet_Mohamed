@@ -1,8 +1,8 @@
 package com.example.livrebiblio.domain.livre;
 
-import java.time.Instant;
-import lombok.NonNull;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.time.Instant;
 
 public class BookSpecificationBuilder {
 
@@ -17,31 +17,44 @@ public class BookSpecificationBuilder {
         return new BookSpecificationBuilder();
     }
 
-    
-    public BookSpecificationBuilder withIsbn(@NonNull String isbn) {
-        instance = instance.and((root, query, builder) ->
-                builder.equal(root.get("isbn"), isbn));
+
+    public BookSpecificationBuilder withIsbn(String isbn) {
+        if (isbn != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.equal(root.get("isbn"), isbn));
+        }
         return this;
     }
 
-    public BookSpecificationBuilder withAuteur(@NonNull String auteur) {
-        instance = instance.and((root, query, builder) ->
-                builder.equal(root.get("auteur"), auteur));
+    public BookSpecificationBuilder withAuteur(String auteur) {
+        if (auteur != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.equal(root.get("auteur"), auteur));
+        }
         return this;
     }
-    public BookSpecificationBuilder withTitre(@NonNull String titre) {
-        instance = instance.and((root, query, builder) ->
-                builder.equal(root.get("titre"), titre));
+
+    public BookSpecificationBuilder withTitre(String titre) {
+        if (titre != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.equal(root.get("titre"), titre));
+        }
         return this;
     }
-    public BookSpecificationBuilder withSynopsis(@NonNull String synopsis) {
-        instance = instance.and((root, query, builder) ->
-                builder.equal(root.get("synopsis"), synopsis));
+
+    public BookSpecificationBuilder withSynopsis(String synopsis) {
+        if (synopsis != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.equal(root.get("synopsis"), synopsis));
+        }
         return this;
     }
-    public BookSpecificationBuilder withDatePublication(@NonNull Instant datePublication) {
-        instance = instance.and((root, query, builder) ->
-                builder.equal(root.get("datePublication"), datePublication));
+
+    public BookSpecificationBuilder withdatePublication(Instant datePublication) {
+        if (datePublication != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.equal(root.get("datePublication"), datePublication));
+        }
         return this;
     }
 

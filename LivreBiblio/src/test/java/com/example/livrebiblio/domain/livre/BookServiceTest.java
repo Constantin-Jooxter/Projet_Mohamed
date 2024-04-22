@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +37,7 @@ public class BookServiceTest {
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du livre");
         savedBook.setAuteur("Auteur du livre");
-        savedBook.setDatePublication("1988");
+        savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
         when(bookRepository.save(savedBook)).thenReturn(savedBook);
@@ -91,7 +93,7 @@ public class BookServiceTest {
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du livre");
         savedBook.setAuteur("Auteur du livre");
-        savedBook.setDatePublication("1988");
+        savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(savedBook));
@@ -137,7 +139,7 @@ public class BookServiceTest {
         book.setIsbn("1234567890");
         book.setTitre("Titre du livre");
         book.setAuteur("Auteur du livre");
-        book.setDatePublication("1988");
+        book.setDatePublication(null);
         book.setSynopsis("TestSynopsis");
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
@@ -164,21 +166,29 @@ public class BookServiceTest {
         verify(bookRepository).findById(nonExistingBookId);
     }
 
-    /*@Test
-    void should_return_books_with_filters_when_books_exist() throws BookNotFoundException {
+    @Test
+    void should_return_books_with_filtersISBN_when_books_exist() throws BookNotFoundException {
         // Arrange
-        BookingFilters bookingFilters = new BookingFilters("123", "Clean code", "Mohamed", , "TestSynopsis");
-        bookingFilters.setIsbn("123");
+        Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
+        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "TestAuteur", datePublication, "TestSynopsisTest");
+
+        // Créez une liste de BookDTO simulée à retourner par bookService.search()
+        List<BookDTO> searchResults = new ArrayList<>();
+        // Ajoutez ici des éléments à la liste searchResults si nécessaire
+
+        // Mockez bookService.search() pour retourner la liste simulée searchResults
+        when(bookService.search(bookingFilters)).thenReturn(searchResults);
 
         // Act
-        List<BookDTO> searchResults = bookService.search(bookingFilters);
+        List<BookDTO> actualBooks = bookService.search(bookingFilters);
 
         // Assert
-        assertFalse(searchResults.isEmpty());
+        assertFalse(actualBooks.isEmpty());
+        assertEquals(searchResults.size(), actualBooks.size());
 
-        for (BookDTO bookDTO : searchResults) {
-            assertEquals("123", bookDTO.getIsbn());
-        }
-    }*/
+        // Assurez-vous que bookService.search() a été appelé avec les bons paramètres
+        verify(bookService).search(bookingFilters);
+    }
+
 
 }

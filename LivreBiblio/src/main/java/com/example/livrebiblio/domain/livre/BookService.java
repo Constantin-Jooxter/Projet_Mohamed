@@ -84,14 +84,14 @@ public class BookService {
 
     public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
         Specification<Book> specification = buildSpecification(bookingFilters);
-        List<BookDTO> books = bookRepository.findAll(specification).stream()
-                .map(BookMapper::convertToBookDTO)
-                .collect(Collectors.toList());
+        List<Book> books = bookRepository.findAll(specification);
 
-        if (books.isEmpty()) {
-            throw new BookNotFoundException("Book not found");
+        if (!books.isEmpty()) {
+            return books.stream()
+                    .map(BookMapper::convertToBookDTO)
+                    .collect(Collectors.toList());
         } else {
-            return books;
+            throw new BookNotFoundException("Book not found");
         }
     }
 
@@ -100,30 +100,9 @@ public class BookService {
         return BookSpecificationBuilder.builder()
                 .withIsbn(bookingFilters.getIsbn())
                 .withTitre(bookingFilters.getTitre())
-                .withAuteur(bookingFilters.getAuteur())
-                .withDatePublication(bookingFilters.getDatePublication())
+                .withAuteur(bookingFilters.getAuthor())
+                .withdatePublication(bookingFilters.getDatePublication())
                 .withSynopsis(bookingFilters.getSynopsis())
                 .build();
     }
-
-   /* public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
-        //Specification<Book> specification = BookSpecificationBuilder.builder()
-        Specification<Book> specification = BookSpecificationBuilder.builder(criteriaBuilder, root)
-                .withIsbn(bookingFilters.getIsbn())
-                .withAuteur(bookingFilters.getAuteur())
-                .withTitre(bookingFilters.getTitre())
-                .withSynopsis(bookingFilters.getSynopsis())
-                .withDatePublication(bookingFilters.getDatePublication())
-                .build();
-
-        List<Book> books = bookRepository.findAll(specification);
-
-        if (!books.isEmpty()) {
-            return books.stream()
-                    .map(BookMapper::convertToBookDTO)
-                    .collect(Collectors.toList());
-        } else {
-            throw new BookNotFoundException("No books found.");
-        }
-    }*/
 }

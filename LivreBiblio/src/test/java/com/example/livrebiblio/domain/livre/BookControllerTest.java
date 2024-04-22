@@ -38,7 +38,7 @@ public class BookControllerTest {
 
     @Test
     void should_return_OK_and_bookDTO() throws Exception {
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", null, "TestSynopsis");
         when(bookService.getBookById(1L)).thenReturn(bookDTO);
 
         mockMvc.perform(get("/books/1"))
@@ -59,7 +59,7 @@ public class BookControllerTest {
     void should_return_NotFound_and_bookDTO() throws Exception {
         Long id = 10L;
 
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", null, "TestSynopsis");
 
         when(bookService.getBookById(Mockito.eq(id))).thenThrow(BookNotFoundException.class);
 
@@ -75,7 +75,7 @@ public class BookControllerTest {
 
     @Test
     void should_return_OK_when_given_good_body_for_post() throws Exception {
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", null, "TestSynopsis");
         BookRequest bookingRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
         when(bookService.createBook(bookingRequest)).thenReturn(bookDTO);
 
@@ -91,7 +91,7 @@ public class BookControllerTest {
 
     @Test
     void should_return_BadRequest_when_given_BadBody_for_post() throws Exception {
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du livre", "Auteur du livre", null, "TestSynopsis");
         BookRequest bookingRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
 
         when(bookService.createBook(bookingRequest)).thenReturn(bookDTO);
@@ -152,7 +152,9 @@ public class BookControllerTest {
 
     @Test
     void should_return_NotFound_when_given_Badbody_for_update() throws Exception {
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        // String datePublicationString = "2024-04-19T12:00:00Z";
+        // Instant datePublication = Instant.parse(datePublicationString);
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", null, "TestSynopsis");
         ;
 
         when(bookService.updateBook(2L, bookRequest)).thenThrow(BookNotFoundException.class);

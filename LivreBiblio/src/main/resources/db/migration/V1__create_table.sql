@@ -4,6 +4,6 @@ CREATE TABLE Books
     isbn             VARCHAR(20),
     titre            VARCHAR(255),
     auteur           VARCHAR(255),
-    date_Publication VARCHAR(255),
+    date_Publication TIMESTAMP,
     synopsis         TEXT
 );
