@@ -64,24 +64,6 @@ public class BookService {
         }
     }
 
-    public BookDTO getBookByIsbn(String isbn) throws BookNotFoundException {
-        Book book = bookRepository.findBooksByIsbn(isbn);
-        if (book != null) {
-            return BookMapper.convertToBookDTO(book);
-        } else {
-            throw new BookNotFoundException("Book not found with ISBN : " + isbn);
-        }
-    }
-
-    public BookDTO getBookByAuthor(String auteur) throws BookNotFoundException {
-        Book book = bookRepository.findBookByAuteur(auteur);
-        if (book != null) {
-            return BookMapper.convertToBookDTO(book);
-        } else {
-            throw new BookNotFoundException("Book not found with Author : " + auteur);
-        }
-    }
-
     public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
         Specification<Book> specification = buildSpecification(bookingFilters);
         List<Book> books = bookRepository.findAll(specification);

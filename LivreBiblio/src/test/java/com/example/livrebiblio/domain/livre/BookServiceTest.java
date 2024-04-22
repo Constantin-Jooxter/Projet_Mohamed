@@ -5,15 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -167,28 +165,24 @@ public class BookServiceTest {
     }
 
     @Test
-    void should_return_books_with_filtersISBN_when_books_exist() throws BookNotFoundException {
+    void should_return_books_with_filters_when_books_exist() throws BookNotFoundException {
         // Arrange
-        Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
-        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "TestAuteur", datePublication, "TestSynopsisTest");
+        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "TestAuteur", null, "TestSynopsisTest");
+        Book book = new Book();
+        book.setIsbn("55555");
+        book.setTitre("TestTitre");
+        book.setAuteur("TestAuteur");
+        book.setDatePublication(null);
+        book.setSynopsis("TestSynopsisTest");
 
-        // Créez une liste de BookDTO simulée à retourner par bookService.search()
-        List<BookDTO> searchResults = new ArrayList<>();
-        // Ajoutez ici des éléments à la liste searchResults si nécessaire
+        List<Book> expectedBooks = List.of(book);
 
-        // Mockez bookService.search() pour retourner la liste simulée searchResults
-        when(bookService.search(bookingFilters)).thenReturn(searchResults);
+        Mockito.when(bookRepository.findAll(Mockito.<Specification<Book>>any())).thenReturn(expectedBooks);
 
         // Act
-        List<BookDTO> actualBooks = bookService.search(bookingFilters);
+        bookService.search(bookingFilters);
 
         // Assert
-        assertFalse(actualBooks.isEmpty());
-        assertEquals(searchResults.size(), actualBooks.size());
-
-        // Assurez-vous que bookService.search() a été appelé avec les bons paramètres
-        verify(bookService).search(bookingFilters);
+        verify(bookRepository).findAll(Mockito.<Specification<Book>>any());
     }
-
-
 }
