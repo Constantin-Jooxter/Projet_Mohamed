@@ -1,4 +1,4 @@
-package com.example.livrebiblio.domain.livre;
+package com.example.livrebiblio.domain.book;
 
 
 import jakarta.persistence.*;

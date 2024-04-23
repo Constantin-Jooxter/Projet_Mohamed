@@ -1,7 +1,7 @@
 package com.example.livrebiblio;
 
-import com.example.livrebiblio.domain.livre.BookBadRequestException;
-import com.example.livrebiblio.domain.livre.BookNotFoundException;
+import com.example.livrebiblio.domain.book.BookBadRequestException;
+import com.example.livrebiblio.domain.book.BookNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

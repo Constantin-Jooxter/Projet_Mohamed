@@ -1,4 +1,4 @@
-package com.example.livrebiblio.domain.livre;
+package com.example.livrebiblio.domain.book;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import java.time.Instant;
 
 @Data
 @AllArgsConstructor
-public class BookingFilters { //private Long id;
+public class BookingFilters {
 
     @Parameter(name = "isbn", description = "Search isbn")
     private String isbn;

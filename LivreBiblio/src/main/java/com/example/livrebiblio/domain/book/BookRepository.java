@@ -1,4 +1,4 @@
-package com.example.livrebiblio.domain.livre;
+package com.example.livrebiblio.domain.book;
 
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,9 +9,6 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-    Book findBooksByIsbn(String isbn);
-
-    Book findBookByAuteur(String auteur);
 
     @NonNull
     List<Book> findAll();

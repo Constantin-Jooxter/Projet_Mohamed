@@ -1,4 +1,4 @@
-package com.example.livrebiblio.domain.livre;
+package com.example.livrebiblio.domain.book;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,11 +30,11 @@ public class BookServiceTest {
     @Test
     void should_create_book_when_bookRequest_is_given() {
         // Arrange
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setIsbn("1234567890");
-        savedBook.setTitre("Titre du livre");
-        savedBook.setAuteur("Auteur du livre");
+        savedBook.setTitre("Titre du book");
+        savedBook.setAuteur("Auteur du book");
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
@@ -85,12 +85,12 @@ public class BookServiceTest {
     void should_update_book_when_bookRequest_is_given() throws BookNotFoundException {
         // Arrange
         Long bookId = 6L;
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
-        savedBook.setTitre("Titre du livre");
-        savedBook.setAuteur("Auteur du livre");
+        savedBook.setTitre("Titre du book");
+        savedBook.setAuteur("Auteur du book");
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
@@ -113,7 +113,7 @@ public class BookServiceTest {
     void should_throw_BookNotFoundException_when_non_existent_id_is_given_with_update() {
         // Arrange
         long nonExistingBookId = 12L;
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du livre", "Auteur du livre", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
 
         when(bookRepository.findById(nonExistingBookId)).thenReturn(Optional.empty());
 
@@ -135,8 +135,8 @@ public class BookServiceTest {
         Book book = new Book();
         book.setId(bookId);
         book.setIsbn("1234567890");
-        book.setTitre("Titre du livre");
-        book.setAuteur("Auteur du livre");
+        book.setTitre("Titre du book");
+        book.setAuteur("Auteur du book");
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsis");
 
