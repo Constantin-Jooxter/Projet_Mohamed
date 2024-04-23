@@ -51,7 +51,6 @@ public class BookService {
         }
     }
 
-
     // GET
 
     public BookDTO getBookById(Long id) throws BookNotFoundException {
