@@ -29,7 +29,7 @@ public class BookSpecificationBuilder {
     public BookSpecificationBuilder withAuteur(String auteur) {
         if (auteur != null) {
             instance = instance.and((root, query, builder) ->
-                    builder.equal(root.get("auteur"), auteur));
+                    builder.equal(root.get("author"), auteur));
         }
         return this;
     }

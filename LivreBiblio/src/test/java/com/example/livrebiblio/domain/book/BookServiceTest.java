@@ -34,7 +34,7 @@ public class BookServiceTest {
         Book savedBook = new Book();
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du book");
-        savedBook.setAuteur("Auteur du book");
+        savedBook.setAuthor("Auteur du book");
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
@@ -44,7 +44,7 @@ public class BookServiceTest {
         BookDTO result = bookService.createBook(bookRequest);
 
         // Assert
-        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), savedBook.getAuteur(), savedBook.getDatePublication(), savedBook.getSynopsis());
+        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), savedBook.getAuthor(), savedBook.getDatePublication(), savedBook.getSynopsis());
         Assertions.assertThat(result).isEqualTo(expectedDTO);
         verify(bookRepository).save(savedBook);
     }
@@ -90,7 +90,7 @@ public class BookServiceTest {
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du book");
-        savedBook.setAuteur("Auteur du book");
+        savedBook.setAuthor("Auteur du book");
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
@@ -136,7 +136,7 @@ public class BookServiceTest {
         book.setId(bookId);
         book.setIsbn("1234567890");
         book.setTitre("Titre du book");
-        book.setAuteur("Auteur du book");
+        book.setAuthor("Auteur du book");
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsis");
 
@@ -171,7 +171,7 @@ public class BookServiceTest {
         Book book = new Book();
         book.setIsbn("55555");
         book.setTitre("TestTitre");
-        book.setAuteur("TestAuteur");
+        book.setAuthor("TestAuteur");
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsisTest");
 

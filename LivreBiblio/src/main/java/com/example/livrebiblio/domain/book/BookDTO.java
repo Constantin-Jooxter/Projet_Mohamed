@@ -17,7 +17,11 @@ public class BookDTO {
     public BookDTO(Book book) {
         this.isbn = book.getIsbn();
         this.titre = book.getTitre();
-        this.auteur = book.getAuteur();
+        if (book.getAuthor() != null) {
+            this.auteur = book.getAuthor().toString();
+        } else {
+            this.auteur = null;
+        }
         this.datePublication = book.getDatePublication();
         this.synopsis = book.getSynopsis();
     }

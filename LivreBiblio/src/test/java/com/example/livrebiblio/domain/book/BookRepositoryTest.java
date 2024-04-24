@@ -27,7 +27,7 @@ public class BookRepositoryTest {
         Book book1 = new Book();
         book1.setIsbn("1234567890");
         book1.setTitre("Titre du book 1");
-        book1.setAuteur("Auteur du book 1");
+        book1.setAuthor("Auteur du book 1");
         book1.setDatePublication(Instant.now());
         book1.setSynopsis("TestSynopsis 1");
         bookRepository.save(book1);
@@ -35,7 +35,7 @@ public class BookRepositoryTest {
         Book book2 = new Book();
         book2.setIsbn("0987654321");
         book2.setTitre("Titre du book 2");
-        book2.setAuteur("Auteur du book 2");
+        book2.setAuthor("Auteur du book 2");
         book2.setDatePublication(Instant.now());
         book2.setSynopsis("TestSynopsis 2");
         bookRepository.save(book2);
