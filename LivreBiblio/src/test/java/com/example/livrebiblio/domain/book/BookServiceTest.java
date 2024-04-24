@@ -1,5 +1,6 @@
 package com.example.livrebiblio.domain.book;
 
+import com.example.livrebiblio.domain.author.Author;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +31,11 @@ public class BookServiceTest {
     @Test
     void should_create_book_when_bookRequest_is_given() {
         // Arrange
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, "1988", "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du book");
-        savedBook.setAuthor("Auteur du book");
+        savedBook.setAuthor(null);
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
@@ -44,7 +45,7 @@ public class BookServiceTest {
         BookDTO result = bookService.createBook(bookRequest);
 
         // Assert
-        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), savedBook.getAuthor(), savedBook.getDatePublication(), savedBook.getSynopsis());
+        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), null, savedBook.getDatePublication(), savedBook.getSynopsis());
         Assertions.assertThat(result).isEqualTo(expectedDTO);
         verify(bookRepository).save(savedBook);
     }
@@ -85,12 +86,14 @@ public class BookServiceTest {
     void should_update_book_when_bookRequest_is_given() throws BookNotFoundException {
         // Arrange
         Long bookId = 6L;
+        Author author = new Author();
+        author.setName("test");
         BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du book");
-        savedBook.setAuthor("Auteur du book");
+        savedBook.setAuthor(author);
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
 
@@ -132,11 +135,13 @@ public class BookServiceTest {
     void should_return_bookDTO_when_book_exists() throws BookNotFoundException {
         // Arrange
         Long bookId = 6L;
+        Author author = new Author();
+        author.setName("test");
         Book book = new Book();
         book.setId(bookId);
         book.setIsbn("1234567890");
         book.setTitre("Titre du book");
-        book.setAuthor("Auteur du book");
+        book.setAuthor(author);
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsis");
 
@@ -167,11 +172,13 @@ public class BookServiceTest {
     @Test
     void should_return_books_with_filters_when_books_exist() throws BookNotFoundException {
         // Arrange
-        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "TestAuteur", null, "TestSynopsisTest");
+        Author author = new Author();
+        author.setName("test");
+        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", 1L, null, "TestSynopsisTest");
         Book book = new Book();
         book.setIsbn("55555");
         book.setTitre("TestTitre");
-        book.setAuthor("TestAuteur");
+        book.setAuthor(author);
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsisTest");
 

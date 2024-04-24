@@ -6,7 +6,6 @@ import java.time.Instant;
 
 public class BookSpecificationBuilder {
 
-
     private Specification<Book> instance;
 
     private BookSpecificationBuilder() {
@@ -26,10 +25,10 @@ public class BookSpecificationBuilder {
         return this;
     }
 
-    public BookSpecificationBuilder withAuteur(String auteur) {
-        if (auteur != null) {
+    public BookSpecificationBuilder withAuteur(Long authorId) {
+        if (authorId != null) {
             instance = instance.and((root, query, builder) ->
-                    builder.equal(root.get("author"), auteur));
+                    builder.equal(root.get("author").get("id"), authorId));
         }
         return this;
     }

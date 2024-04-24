@@ -12,4 +12,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
     @NonNull
     List<Book> findAll();
+
+    Book findByTitre(String trimmedTitle);
 }

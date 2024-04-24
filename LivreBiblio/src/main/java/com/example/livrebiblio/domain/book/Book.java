@@ -26,9 +26,6 @@ public class Book {
     @Column(nullable = false)
     private String titre;
 
-    /*@Column(nullable = false)
-    private String author;*/
-
     @Column(nullable = false)
     private Instant datePublication;
 
@@ -36,6 +33,6 @@ public class Book {
     private String synopsis;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    @JoinColumn(name = "author_id")
     private Author author;
 }

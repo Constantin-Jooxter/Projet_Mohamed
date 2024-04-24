@@ -3,14 +3,14 @@ package com.example.livrebiblio.domain.author;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 public class AuthorDTO {
     private String name;
     private String surname;
-    private Instant birthday;
+    private Date birthday;
     private String ownBooks;
 
     public AuthorDTO(Author author) {

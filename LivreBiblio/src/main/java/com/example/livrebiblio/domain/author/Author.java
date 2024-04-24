@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -26,9 +26,14 @@ public class Author {
     @Column(nullable = false)
     private String surname;
     @Column(nullable = false)
-    private Instant birthday;
+    private Date birthday;
     @Column(name = "ownbooks", nullable = false)
     private String ownBooks;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return this.name + " " + this.surname;
+    }
 }

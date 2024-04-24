@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,8 +15,9 @@ public class AuthorRequest {
     private String name;
     @NotBlank
     private String surname;
-    private Instant birthday;
+    private Date birthday;
     @NotBlank
+
     private String ownBooks;
     private List<String> bookTitles;
 }

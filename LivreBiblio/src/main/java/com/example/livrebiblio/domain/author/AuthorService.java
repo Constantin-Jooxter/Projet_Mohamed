@@ -7,8 +7,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -20,30 +20,62 @@ public class AuthorService {
     @Autowired
     private BookRepository bookRepository;
 
-    // private BookService bookService;
-
     // GET
 
-    public Author getAuthorById(Long id) throws AuthorNotFoundException {
-        return authorRepository.findById(id)
-                .orElseThrow(() -> new AuthorNotFoundException("Author not found with ID : " + id));
+    public AuthorDTO getAuthorById(Long id) throws AuthorNotFoundException {
+        Optional<Author> author = authorRepository.findById(id);
+        if (author.isPresent()) {
+            Author authorEntity = author.get();
+            return AuthorMapper.convertToAuthorDTO(authorEntity);
+        } else {
+            throw new AuthorNotFoundException("Author not found");
+        }
     }
+
 
     // POST
 
-    public Author createAuthor(AuthorRequest authorRequest) throws AuthorNotFoundException {
-        Author author = new Author();
-        BeanUtils.copyProperties(authorRequest, author);
+    public AuthorDTO createAuthor(AuthorRequest authorRequest) throws AuthorNotFoundException {
 
-        List<String> bookTitles = Arrays.asList(authorRequest.getOwnBooks().split(","));
-
-        for (String bookTitle : bookTitles) {
-            Book book = new Book();
-            book.setTitre(bookTitle.trim());
-            book.setAuthor(author);
-            author.getBooks().add(book);
-        }
-        return authorRepository.save(author);
+        Author author = createAuthorFromRequest(authorRequest);
+        associateBooksToAuthor(author, List.of(authorRequest.getOwnBooks().split(",")));
+        Author savedAuthor = authorRepository.save(author);
+        return createAuthorDTO(savedAuthor);
     }
 
+
+    private void associateBooksToAuthor(Author author, List<String> bookTitles) {
+        for (String bookTitle : bookTitles) {
+            String trimmedTitle = bookTitle.trim();
+
+            Book existingBook = bookRepository.findByTitre(trimmedTitle);
+
+            if (existingBook != null) {
+                if (existingBook.getAuthor() == null) {
+                    existingBook.setAuthor(author);
+                    author.getBooks().add(existingBook);
+                }
+            } else {
+                Book newBook = createBookWithTitle(trimmedTitle, author);
+                author.getBooks().add(newBook);
+            }
+        }
+    }
+
+    private Author createAuthorFromRequest(AuthorRequest authorRequest) {
+        Author author = new Author();
+        BeanUtils.copyProperties(authorRequest, author);
+        return author;
+    }
+
+    private AuthorDTO createAuthorDTO(Author author) {
+        return new AuthorDTO(author);
+    }
+
+    private Book createBookWithTitle(String bookTitle, Author author) {
+        Book book = new Book();
+        book.setTitre(bookTitle);
+        book.setAuthor(author);
+        return book;
+    }
 }
