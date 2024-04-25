@@ -13,5 +13,4 @@ public class AuthorRequest {
     private String name;
     private String surname;
     private Date birthday;
-    //  private String ownBooks;
 }

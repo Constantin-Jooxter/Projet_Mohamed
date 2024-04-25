@@ -4,9 +4,12 @@ import com.example.livrebiblio.domain.book.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -51,6 +54,34 @@ public class AuthorService {
         return new AuthorDTO(author);
     }
 
+    public List<AuthorDTO> searchAuthor(AuthorFilters authorFilters) throws AuthorNotFoundException {
+        Specification<Author> specification = buildSpecification(authorFilters);
+        List<Author> authors = authorRepository.findAll(specification);
+
+        if (!authors.isEmpty()) {
+            return authors.stream()
+                    .map(AuthorMapper::convertToAuthorDTO)
+                    .collect(Collectors.toList());
+        } else {
+            throw new AuthorNotFoundException("Book not found");
+        }
+    }
+
+    public Specification<Author> buildSpecification(AuthorFilters authorsFilters) {
+
+        return AuthorSpecificationBuilder.builder()
+                .withName(authorsFilters.getName())
+                .withSurname(authorsFilters.getSurname())
+                .withBirthday(authorsFilters.getBirthday())
+                .build();
+    }
+
+}
+
+
+
+
+
     /*private Book createBookWithTitle(String bookTitle, Author author) {
         Book book = new Book();
         book.setTitre(bookTitle);
@@ -75,4 +106,3 @@ public class AuthorService {
             }
         }
     }*/
-}
