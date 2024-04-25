@@ -35,7 +35,6 @@ public class BookRepositoryTest {
         Author author1 = new Author();
         author1.setName("Auteur du book 1");
         author1.setBirthday(new Date());
-        author1.setOwnBooks("Liste des livres");
         author1.setSurname("Anto");
         authorRepository.save(author1);
 
@@ -50,7 +49,6 @@ public class BookRepositoryTest {
         Author author2 = new Author();
         author2.setName("Auteur du book 2");
         author2.setBirthday(new Date());
-        author2.setOwnBooks("Liste des livres");
         author2.setSurname("Anto");
         authorRepository.save(author2);
 

@@ -38,7 +38,6 @@ public class AuthorControllerTest {
         author.setBirthday(Date.from(Instant.now()));
         author.setName("John Doe");
         author.setSurname("Dirot");
-        author.setOwnBooks("Clean Code");
 
         // Convert Author entity to AuthorDTO
         AuthorDTO authorDTO = AuthorMapper.convertToAuthorDTO(author);

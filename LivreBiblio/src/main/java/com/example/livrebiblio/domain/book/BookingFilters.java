@@ -15,7 +15,7 @@ public class BookingFilters {
     @Parameter(name = "titre", description = "Search titre")
     private String titre;
     @Parameter(name = "author", description = "Search author")
-    private Long author;
+    private String author;
     @Parameter(name = "datePublication", description = "Search Date")
     private Instant datePublication;
     @Parameter(name = "Synopsis", description = "Resume of Story")

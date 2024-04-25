@@ -5,7 +5,6 @@ import com.example.livrebiblio.domain.author.AuthorNotFoundException;
 import com.example.livrebiblio.domain.author.AuthorRepository;
 import com.example.livrebiblio.domain.author.AuthorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -29,37 +28,12 @@ public class BookService {
     @Autowired
     AuthorRepository authorRepository;
 
-    /*public BookDTO createBook(BookRequest bookRequest) {
-        Book book = new Book();
-        BeanUtils.copyProperties(bookRequest, book);
-
-        Book savedBook = bookRepository.save(book);
-
-        return new BookDTO(savedBook);
-    }*/
-
     public BookDTO createBook(BookRequest bookRequest) throws AuthorNotFoundException {
         Long authorId = bookRequest.getAuteur();
-        Book book = new Book();
-        book.setIsbn(bookRequest.getIsbn());
-        book.setTitre(bookRequest.getTitre());
-        book.setDatePublication(Instant.parse(bookRequest.getDatePublication()));
-        book.setSynopsis(bookRequest.getSynopsis());
-
-        Author author = authorRepository.findAuthorById(authorId);
-
-        if (author != null) {
-            BookDTO bookDTO = createBookWithAuthor(bookRequest, author);
-            return bookDTO;
-        } else if (authorId == null) {
-            Book savedBookWithoutAuthor = bookRepository.save(book);
-            return new BookDTO(savedBookWithoutAuthor);
-        } else {
-            Book savedBook = bookRepository.save(book);
-            return new BookDTO(savedBook);
-        }
+        return authorRepository.findById(authorId)
+                .map(author -> createBookWithAuthor(bookRequest, author))
+                .orElseThrow(() -> new AuthorNotFoundException("Author not found"));
     }
-
 
     private BookDTO createBookWithAuthor(BookRequest bookRequest, Author author) {
         Book book = new Book();
@@ -86,8 +60,7 @@ public class BookService {
     public BookRequest updateBook(Long id, BookRequest bookRequest) throws BookNotFoundException {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isPresent()) {
-            Book book = optionalBook.get();
-            BeanUtils.copyProperties(bookRequest, book);
+            Book book = initialiseBook(bookRequest, optionalBook);
 
             bookRepository.save(book);
 
@@ -97,17 +70,23 @@ public class BookService {
         }
     }
 
+    private static Book initialiseBook(BookRequest bookRequest, Optional<Book> optionalBook) {
+        Book book = optionalBook.get();
+        book.setIsbn(bookRequest.getIsbn());
+        book.setTitre(bookRequest.getTitre());
+        book.setDatePublication(Instant.parse(bookRequest.getDatePublication()));
+        book.setSynopsis(bookRequest.getSynopsis());
+        return book;
+    }
+
     // GET
 
     public BookDTO getBookById(Long id) throws BookNotFoundException {
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isPresent()) {
-            Book book = optionalBook.get();
-            return BookMapper.convertToBookDTO(book);
-        } else {
-            throw new BookNotFoundException("Book not found with ID : " + id);
-        }
+        return bookRepository.findById(id)
+                .map(BookMapper::convertToBookDTO)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with ID : " + id));
     }
+
 
     public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
         Specification<Book> specification = buildSpecification(bookingFilters);
@@ -127,7 +106,7 @@ public class BookService {
         return BookSpecificationBuilder.builder()
                 .withIsbn(bookingFilters.getIsbn())
                 .withTitre(bookingFilters.getTitre())
-                .withAuteur(bookingFilters.getAuthor())
+                .withAuteurName(bookingFilters.getAuthor())
                 .withdatePublication(bookingFilters.getDatePublication())
                 .withSynopsis(bookingFilters.getSynopsis())
                 .build();

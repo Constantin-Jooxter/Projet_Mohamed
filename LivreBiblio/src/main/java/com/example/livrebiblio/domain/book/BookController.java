@@ -19,7 +19,7 @@ public class BookController {
 
     // POST
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<BookDTO> createBook(@RequestBody @Valid BookRequest bookRequest) throws AuthorNotFoundException {
         return ResponseEntity.ok().body(bookService.createBook(bookRequest));
     }

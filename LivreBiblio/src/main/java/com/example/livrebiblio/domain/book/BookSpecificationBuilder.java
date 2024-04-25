@@ -1,5 +1,8 @@
 package com.example.livrebiblio.domain.book;
 
+import com.example.livrebiblio.domain.author.Author;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
@@ -25,13 +28,16 @@ public class BookSpecificationBuilder {
         return this;
     }
 
-    public BookSpecificationBuilder withAuteur(Long authorId) {
-        if (authorId != null) {
-            instance = instance.and((root, query, builder) ->
-                    builder.equal(root.get("author").get("id"), authorId));
+    public BookSpecificationBuilder withAuteurName(String authorName) {
+        if (authorName != null) {
+            instance = instance.and((root, query, builder) -> {
+                Join<Book, Author> authorJoin = root.join("author", JoinType.INNER);
+                return builder.equal(authorJoin.get("name"), authorName);
+            });
         }
         return this;
     }
+
 
     public BookSpecificationBuilder withTitre(String titre) {
         if (titre != null) {

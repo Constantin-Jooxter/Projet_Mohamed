@@ -81,7 +81,7 @@ public class BookControllerTest {
     void should_return_OK_when_given_good_body_for_post() throws Exception {
         Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
         BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", datePublication, "TestSynopsis");
-        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
         when(bookService.createBook(bookingRequest)).thenReturn(bookDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/books/create")
@@ -98,13 +98,13 @@ public class BookControllerTest {
     void should_return_BadRequest_when_given_BadBody_for_post() throws Exception {
         Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
         BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", datePublication, "TestSynopsis");
-        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
 
         when(bookService.createBook(bookingRequest)).thenReturn(bookDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/books/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new BookRequest("", "Titre du book", "Auteur du book", "2024-04-22T11:30:03Z", "TestSynopsis"))))
+                        .content(objectMapper.writeValueAsString(new BookRequest("", "Titre du book", 1L, "2024-04-22T11:30:03Z", "TestSynopsis"))))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
@@ -140,14 +140,14 @@ public class BookControllerTest {
 
     @Test
     void should_return_OK_with_good_body_for_update() throws Exception {
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
 
         when(bookService.updateBook(Mockito.eq(1L), any(BookRequest.class)))
                 .thenReturn(bookRequest);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/books/updateById/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis"))))
+                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis"))))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -158,14 +158,14 @@ public class BookControllerTest {
 
     @Test
     void should_return_NotFound_when_given_Badbody_for_update() throws Exception {
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
         Long bookId = 2L;
 
         when(bookService.updateBook(bookId, bookRequest)).thenThrow(BookNotFoundException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/books/updateById/2")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis"))))
+                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis"))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 

@@ -13,6 +13,6 @@ public class AuthorFilters {
     private String name;
     @Parameter(name = "surname", description = "Search by Surname")
     private String surname;
-    @Parameter(name = "birthday", description = "Search by birthday")
+    @Parameter(name = "birthday", description = "Search by birthday", example = "yyyy-MM-dd")
     private Date birthday;
 }

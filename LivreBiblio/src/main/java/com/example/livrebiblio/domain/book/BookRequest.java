@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
 @Data
 @AllArgsConstructor
 public class BookRequest {
@@ -13,7 +12,6 @@ public class BookRequest {
     private String isbn;
     @NotBlank
     private String titre;
-
     private Long auteur;
     private String datePublication;
     @NotBlank

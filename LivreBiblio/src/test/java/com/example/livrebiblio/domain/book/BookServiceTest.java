@@ -1,6 +1,7 @@
 package com.example.livrebiblio.domain.book;
 
 import com.example.livrebiblio.domain.author.Author;
+import com.example.livrebiblio.domain.author.AuthorNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,14 +31,14 @@ public class BookServiceTest {
 
 
     @Test
-    void should_create_book_when_bookRequest_is_given() {
+    void should_create_book_when_bookRequest_is_given() throws AuthorNotFoundException {
         // Arrange
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, "2024-04-25T14:11:02.755Z", "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du book");
         savedBook.setAuthor(null);
-        savedBook.setDatePublication(null);
+        savedBook.setDatePublication(Instant.parse("2024-04-25T14:11:02.755Z"));
         savedBook.setSynopsis("TestSynopsis");
 
         when(bookRepository.save(savedBook)).thenReturn(savedBook);
@@ -45,7 +47,7 @@ public class BookServiceTest {
         BookDTO result = bookService.createBook(bookRequest);
 
         // Assert
-        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), null, savedBook.getDatePublication(), savedBook.getSynopsis());
+        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), "test", savedBook.getDatePublication(), savedBook.getSynopsis());
         Assertions.assertThat(result).isEqualTo(expectedDTO);
         verify(bookRepository).save(savedBook);
     }
@@ -88,7 +90,7 @@ public class BookServiceTest {
         Long bookId = 6L;
         Author author = new Author();
         author.setName("test");
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
@@ -116,7 +118,7 @@ public class BookServiceTest {
     void should_throw_BookNotFoundException_when_non_existent_id_is_given_with_update() {
         // Arrange
         long nonExistingBookId = 12L;
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", "Auteur du book", "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
 
         when(bookRepository.findById(nonExistingBookId)).thenReturn(Optional.empty());
 
@@ -174,7 +176,7 @@ public class BookServiceTest {
         // Arrange
         Author author = new Author();
         author.setName("test");
-        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", 1L, null, "TestSynopsisTest");
+        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "1L", null, "TestSynopsisTest");
         Book book = new Book();
         book.setIsbn("55555");
         book.setTitre("TestTitre");
