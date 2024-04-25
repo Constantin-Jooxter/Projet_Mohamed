@@ -13,9 +13,8 @@ public class BookRequest {
     private String isbn;
     @NotBlank
     private String titre;
-    @NotBlank
-    private String auteur;
-    @NotBlank
+
+    private Long auteur;
     private String datePublication;
     @NotBlank
     private String synopsis;

@@ -3,7 +3,6 @@ package com.example.livrebiblio.domain.book;
 import com.example.livrebiblio.domain.author.Author;
 import com.example.livrebiblio.domain.author.AuthorRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 public class BookRepositoryTest {
@@ -65,11 +66,11 @@ public class BookRepositoryTest {
         List<Book> foundBooks = bookRepository.findAll();
 
         // Assert
-        Assertions.assertEquals(2, foundBooks.size());
+        assertEquals(2, foundBooks.size());
     }
 
-
     @AfterEach
+
     public void Down() {
         bookRepository.deleteAll();
         authorRepository.deleteAll();

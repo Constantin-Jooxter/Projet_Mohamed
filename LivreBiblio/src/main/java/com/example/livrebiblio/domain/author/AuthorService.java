@@ -1,13 +1,11 @@
 package com.example.livrebiblio.domain.author;
 
-import com.example.livrebiblio.domain.book.Book;
 import com.example.livrebiblio.domain.book.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -32,17 +30,33 @@ public class AuthorService {
         }
     }
 
-
     // POST
 
-    public AuthorDTO createAuthor(AuthorRequest authorRequest) throws AuthorNotFoundException {
-
+    public AuthorDTO createAuthor(AuthorRequest authorRequest) {
         Author author = createAuthorFromRequest(authorRequest);
-        associateBooksToAuthor(author, List.of(authorRequest.getOwnBooks().split(",")));
+        /*if (authorRequest.getOwnBooks() != null) {
+            associateBooksToAuthor(author, List.of(authorRequest.getOwnBooks().split(",")));
+        }*/
         Author savedAuthor = authorRepository.save(author);
         return createAuthorDTO(savedAuthor);
     }
 
+    private Author createAuthorFromRequest(AuthorRequest authorRequest) {
+        Author author = new Author();
+        BeanUtils.copyProperties(authorRequest, author);
+        return author;
+    }
+
+    private AuthorDTO createAuthorDTO(Author author) {
+        return new AuthorDTO(author);
+    }
+
+    /*private Book createBookWithTitle(String bookTitle, Author author) {
+        Book book = new Book();
+        book.setTitre(bookTitle);
+        book.setAuthor(author);
+        return book;
+    }
 
     private void associateBooksToAuthor(Author author, List<String> bookTitles) {
         for (String bookTitle : bookTitles) {
@@ -60,22 +74,5 @@ public class AuthorService {
                 author.getBooks().add(newBook);
             }
         }
-    }
-
-    private Author createAuthorFromRequest(AuthorRequest authorRequest) {
-        Author author = new Author();
-        BeanUtils.copyProperties(authorRequest, author);
-        return author;
-    }
-
-    private AuthorDTO createAuthorDTO(Author author) {
-        return new AuthorDTO(author);
-    }
-
-    private Book createBookWithTitle(String bookTitle, Author author) {
-        Book book = new Book();
-        book.setTitre(bookTitle);
-        book.setAuthor(author);
-        return book;
-    }
+    }*/
 }

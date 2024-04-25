@@ -1,5 +1,6 @@
 package com.example.livrebiblio.domain.book;
 
+import com.example.livrebiblio.domain.author.AuthorNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -19,7 +20,7 @@ public class BookController {
     // POST
 
     @PostMapping("/create")
-    public ResponseEntity<BookDTO> createBook(@RequestBody @Valid BookRequest bookRequest) {
+    public ResponseEntity<BookDTO> createBook(@RequestBody @Valid BookRequest bookRequest) throws AuthorNotFoundException {
         return ResponseEntity.ok().body(bookService.createBook(bookRequest));
     }
 

@@ -27,8 +27,8 @@ public class Author {
     private String surname;
     @Column(nullable = false)
     private Date birthday;
-    @Column(name = "ownbooks", nullable = false)
-    private String ownBooks;
+    // @Column(name = "ownbooks", nullable = false)
+    // private String ownBooks;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
 

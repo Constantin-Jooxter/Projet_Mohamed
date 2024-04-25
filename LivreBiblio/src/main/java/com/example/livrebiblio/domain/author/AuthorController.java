@@ -19,7 +19,7 @@ public class AuthorController {
         return ResponseEntity.ok().body(authorService.getAuthorById(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorRequest authorRequest) throws AuthorNotFoundException {
         return ResponseEntity.ok().body(authorService.createAuthor(authorRequest));
     }

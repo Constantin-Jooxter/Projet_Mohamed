@@ -1,11 +1,16 @@
 package com.example.livrebiblio.domain.book;
 
+import com.example.livrebiblio.domain.author.Author;
+import com.example.livrebiblio.domain.author.AuthorNotFoundException;
+import com.example.livrebiblio.domain.author.AuthorRepository;
+import com.example.livrebiblio.domain.author.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,10 +23,51 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private AuthorService authorService;
 
-    public BookDTO createBook(BookRequest bookRequest) {
+    @Autowired
+    AuthorRepository authorRepository;
+
+    /*public BookDTO createBook(BookRequest bookRequest) {
         Book book = new Book();
         BeanUtils.copyProperties(bookRequest, book);
+
+        Book savedBook = bookRepository.save(book);
+
+        return new BookDTO(savedBook);
+    }*/
+
+    public BookDTO createBook(BookRequest bookRequest) throws AuthorNotFoundException {
+        Long authorId = bookRequest.getAuteur();
+        Book book = new Book();
+        book.setIsbn(bookRequest.getIsbn());
+        book.setTitre(bookRequest.getTitre());
+        book.setDatePublication(Instant.parse(bookRequest.getDatePublication()));
+        book.setSynopsis(bookRequest.getSynopsis());
+
+        Author author = authorRepository.findAuthorById(authorId);
+
+        if (author != null) {
+            BookDTO bookDTO = createBookWithAuthor(bookRequest, author);
+            return bookDTO;
+        } else if (authorId == null) {
+            Book savedBookWithoutAuthor = bookRepository.save(book);
+            return new BookDTO(savedBookWithoutAuthor);
+        } else {
+            Book savedBook = bookRepository.save(book);
+            return new BookDTO(savedBook);
+        }
+    }
+
+
+    private BookDTO createBookWithAuthor(BookRequest bookRequest, Author author) {
+        Book book = new Book();
+        book.setIsbn(bookRequest.getIsbn());
+        book.setTitre(bookRequest.getTitre());
+        book.setDatePublication(Instant.parse(bookRequest.getDatePublication()));
+        book.setSynopsis(bookRequest.getSynopsis());
+        book.setAuthor(author);
 
         Book savedBook = bookRepository.save(book);
 
