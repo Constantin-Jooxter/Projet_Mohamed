@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -12,5 +12,5 @@ import java.util.Date;
 public class AuthorRequest {
     private String name;
     private String surname;
-    private Date birthday;
+    private LocalDate birthday;
 }

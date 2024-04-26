@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,14 +26,9 @@ public class Author {
     @Column(nullable = false)
     private String surname;
     @Column(nullable = false)
-    private Date birthday;
+    private LocalDate birthday;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
-
-    public String getFormattedBirthday() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(this.birthday);
-    }
 
     @Override
     public String toString() {
