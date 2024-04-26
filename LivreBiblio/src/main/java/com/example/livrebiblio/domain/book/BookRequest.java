@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 public class BookRequest {
@@ -13,7 +15,7 @@ public class BookRequest {
     @NotBlank
     private String titre;
     private Long auteur;
-    private String datePublication;
+    private LocalDate datePublication;
     @NotBlank
     private String synopsis;
 }

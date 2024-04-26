@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -16,11 +16,10 @@ public class BookingFilters {
     private String titre;
     @Parameter(name = "author", description = "Search author")
     private String author;
-    @Parameter(name = "datePublication", description = "Search Date")
-    private Instant datePublication;
+    @Parameter(name = "datePublication", description = "Search Date", example = "yyyy-MM-dd")
+    private LocalDate datePublication;
     @Parameter(name = "Synopsis", description = "Resume of Story")
     private String synopsis;
-
 }
 
 

@@ -3,7 +3,7 @@ package com.example.livrebiblio.domain.book;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -11,7 +11,7 @@ public class BookDTO {
     private String isbn;
     private String titre;
     private String auteur;
-    private Instant datePublication;
+    private LocalDate datePublication;
     private String synopsis;
 
     public BookDTO(Book book) {

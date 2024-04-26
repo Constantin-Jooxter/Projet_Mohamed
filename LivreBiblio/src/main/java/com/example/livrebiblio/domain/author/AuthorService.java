@@ -28,7 +28,15 @@ public class AuthorService {
         }
     }
 
-    // POST
+    //Delete
+
+    public void deleteAuthorById(Long id) throws AuthorNotFoundException {
+        Author authorEntity = authorRepository.findById(id)
+                .orElseThrow(() -> new AuthorNotFoundException("Author not found with id " + id));
+        authorRepository.delete(authorEntity);
+    }
+
+// POST
 
     public AuthorDTO createAuthor(AuthorRequest authorRequest) {
         Author author = createAuthorFromRequest(authorRequest);
@@ -70,45 +78,3 @@ public class AuthorService {
                 .build();
     }
 }
-
-
-
-
-
-    /*
-
-    public AuthorDTO createAuthor(AuthorRequest authorRequest) {
-        Author author = createAuthorFromRequest(authorRequest);
-        if (authorRequest.getOwnBooks() != null) {
-            associateBooksToAuthor(author, List.of(authorRequest.getOwnBooks().split(",")));
-        }
-    Author savedAuthor = authorRepository.save(author);
-        return createAuthorDTO(savedAuthor);
-    }
-
-
-
-    private Book createBookWithTitle(String bookTitle, Author author) {
-        Book book = new Book();
-        book.setTitre(bookTitle);
-        book.setAuthor(author);
-        return book;
-    }
-
-    private void associateBooksToAuthor(Author author, List<String> bookTitles) {
-        for (String bookTitle : bookTitles) {
-            String trimmedTitle = bookTitle.trim();
-
-            Book existingBook = bookRepository.findByTitre(trimmedTitle);
-
-            if (existingBook != null) {
-                if (existingBook.getAuthor() == null) {
-                    existingBook.setAuthor(author);
-                    author.getBooks().add(existingBook);
-                }
-            } else {
-                Book newBook = createBookWithTitle(trimmedTitle, author);
-                author.getBooks().add(newBook);
-            }
-        }
-    }*/

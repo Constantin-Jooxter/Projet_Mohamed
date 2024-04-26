@@ -5,7 +5,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 public class BookSpecificationBuilder {
 
@@ -55,7 +55,7 @@ public class BookSpecificationBuilder {
         return this;
     }
 
-    public BookSpecificationBuilder withdatePublication(Instant datePublication) {
+    public BookSpecificationBuilder withdatePublication(LocalDate datePublication) {
         if (datePublication != null) {
             instance = instance.and((root, query, builder) ->
                     builder.equal(root.get("datePublication"), datePublication));

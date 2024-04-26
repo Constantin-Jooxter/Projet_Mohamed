@@ -8,7 +8,6 @@ public class AuthorMapper {
                 author.getName(),
                 author.getSurname(),
                 author.getBirthday()
-                //   author.getOwnBooks()
         );
     }
 }

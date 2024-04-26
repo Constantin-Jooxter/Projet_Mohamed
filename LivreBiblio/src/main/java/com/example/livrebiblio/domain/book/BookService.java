@@ -3,13 +3,11 @@ package com.example.livrebiblio.domain.book;
 import com.example.livrebiblio.domain.author.Author;
 import com.example.livrebiblio.domain.author.AuthorNotFoundException;
 import com.example.livrebiblio.domain.author.AuthorRepository;
-import com.example.livrebiblio.domain.author.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,9 +19,6 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
-    private AuthorService authorService;
 
     @Autowired
     AuthorRepository authorRepository;
@@ -39,7 +34,7 @@ public class BookService {
         Book book = new Book();
         book.setIsbn(bookRequest.getIsbn());
         book.setTitre(bookRequest.getTitre());
-        book.setDatePublication(Instant.parse(bookRequest.getDatePublication()));
+        book.setDatePublication(bookRequest.getDatePublication());
         book.setSynopsis(bookRequest.getSynopsis());
         book.setAuthor(author);
 
@@ -49,7 +44,6 @@ public class BookService {
     }
 
     public void deleteBook(Long id) throws BookNotFoundException {
-
         if (bookRepository.findById(id).isEmpty()) {
             throw new BookNotFoundException("Book with id " + id + " not found");
         } else {
@@ -70,11 +64,11 @@ public class BookService {
         }
     }
 
-    private static Book initialiseBook(BookRequest bookRequest, Optional<Book> optionalBook) {
-        Book book = optionalBook.get();
+    private static Book initialiseBook(BookRequest bookRequest, Optional<Book> optionalBook) throws BookNotFoundException {
+        Book book = optionalBook.orElseThrow(() -> new BookNotFoundException("Book not found"));
         book.setIsbn(bookRequest.getIsbn());
         book.setTitre(bookRequest.getTitre());
-        book.setDatePublication(Instant.parse(bookRequest.getDatePublication()));
+        book.setDatePublication(bookRequest.getDatePublication());
         book.setSynopsis(bookRequest.getSynopsis());
         return book;
     }

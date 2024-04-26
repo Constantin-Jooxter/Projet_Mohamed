@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 
 @Entity
@@ -29,7 +27,7 @@ public class Book {
     private String titre;
 
     @Column(nullable = false)
-    private Instant datePublication;
+    private LocalDate datePublication;
 
     @Column(nullable = false)
     private String synopsis;
@@ -37,8 +35,4 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
-
-    public String formatDatePublication() {
-        return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(datePublication.atZone(ZoneId.systemDefault()));
-    }
 }

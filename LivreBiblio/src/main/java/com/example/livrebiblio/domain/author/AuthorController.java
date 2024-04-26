@@ -4,6 +4,7 @@ package com.example.livrebiblio.domain.author;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,12 @@ public class AuthorController {
     @GetMapping("{id}")
     public ResponseEntity<AuthorDTO> getAuthor(@PathVariable long id) throws AuthorNotFoundException {
         return ResponseEntity.ok().body(authorService.getAuthorById(id));
+    }
+
+    @DeleteMapping("/deleteById/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAuthor(@PathVariable long id) throws AuthorNotFoundException {
+        authorService.deleteAuthorById(id);
     }
 
     @PostMapping("/")
