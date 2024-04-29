@@ -26,7 +26,7 @@ public class BookController {
 
     // DELETE
 
-    @DeleteMapping("deleteById/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable @Valid Long id) throws BookNotFoundException {
         bookService.deleteBook(id);
@@ -34,14 +34,14 @@ public class BookController {
 
     // PUT
 
-    @PutMapping("updateById/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BookRequest> updateBook(@PathVariable Long id, @RequestBody @Valid BookRequest bookRequest) throws BookNotFoundException {
         return ResponseEntity.ok().body(bookService.updateBook(id, bookRequest));
     }
 
     // GET
 
-    @GetMapping("/GetById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) throws BookNotFoundException {
         return ResponseEntity.ok().body(bookService.getBookById(id));
     }

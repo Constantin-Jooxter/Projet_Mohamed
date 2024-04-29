@@ -14,14 +14,12 @@ public class AuthorDTO {
     private String name;
     private String surname;
     private LocalDate birthday;
-    //   private String ownBooks;
 
     public AuthorDTO(Author author) {
         this.id = author.getId();
         this.name = author.getName();
         this.surname = author.getSurname();
         this.birthday = author.getBirthday();
-        //   this.ownBooks = author.getOwnBooks();
     }
 }
 

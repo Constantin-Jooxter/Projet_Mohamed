@@ -5,7 +5,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -19,13 +18,9 @@ public class AuthorService {
     // GET
 
     public AuthorDTO getAuthorById(Long id) throws AuthorNotFoundException {
-        Optional<Author> author = authorRepository.findById(id);
-        if (author.isPresent()) {
-            Author authorEntity = author.get();
-            return AuthorMapper.convertToAuthorDTO(authorEntity);
-        } else {
-            throw new AuthorNotFoundException("Author not found");
-        }
+        return authorRepository.findById(id)
+                .map(AuthorMapper::convertToAuthorDTO)
+                .orElseThrow(() -> new AuthorNotFoundException("Author not found"));
     }
 
     //Delete
@@ -55,6 +50,8 @@ public class AuthorService {
     private AuthorDTO createAuthorDTO(Author author) {
         return new AuthorDTO(author);
     }
+
+    //SEARCH
 
     public List<AuthorDTO> searchAuthor(AuthorFilters authorFilters) throws AuthorNotFoundException {
         Specification<Author> specification = buildSpecification(authorFilters);

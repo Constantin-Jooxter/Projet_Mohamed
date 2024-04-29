@@ -4,24 +4,21 @@ import com.example.livrebiblio.domain.author.Author;
 import com.example.livrebiblio.domain.author.AuthorNotFoundException;
 import com.example.livrebiblio.domain.author.AuthorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
 @Service
 public class BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    @Autowired
-    AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+
+    // POST
 
     public BookDTO createBook(BookRequest bookRequest) throws AuthorNotFoundException {
         Long authorId = bookRequest.getAuteur();
@@ -30,47 +27,55 @@ public class BookService {
                 .orElseThrow(() -> new AuthorNotFoundException("Author not found"));
     }
 
-    private BookDTO createBookWithAuthor(BookRequest bookRequest, Author author) {
+    public BookDTO createBookWithAuthor(BookRequest bookRequest, Author author) {
+        Book book = createBook(bookRequest, author);
+        return saveBook(book);
+    }
+
+    private Book createBook(BookRequest bookRequest, Author author) {
         Book book = new Book();
         book.setIsbn(bookRequest.getIsbn());
         book.setTitre(bookRequest.getTitre());
         book.setDatePublication(bookRequest.getDatePublication());
         book.setSynopsis(bookRequest.getSynopsis());
         book.setAuthor(author);
+        return book;
+    }
+
+    private BookDTO saveBook(Book book) {
 
         Book savedBook = bookRepository.save(book);
-
         return new BookDTO(savedBook);
     }
 
+    // Delete
+
     public void deleteBook(Long id) throws BookNotFoundException {
-        if (bookRepository.findById(id).isEmpty()) {
-            throw new BookNotFoundException("Book with id " + id + " not found");
-        } else {
-            bookRepository.deleteById(id);
-        }
+        bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book with id " + id + " not found"));
+        bookRepository.deleteById(id);
     }
+
+    // PUT
 
     public BookRequest updateBook(Long id, BookRequest bookRequest) throws BookNotFoundException {
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isPresent()) {
-            Book book = initialiseBook(bookRequest, optionalBook);
+        Book book = initialiseBook(id, bookRequest);
 
-            bookRepository.save(book);
+        bookRepository.save(book);
 
-            return bookRequest;
-        } else {
-            throw new BookNotFoundException("Book not found with ID : " + id);
-        }
+        return bookRequest;
     }
 
-    private static Book initialiseBook(BookRequest bookRequest, Optional<Book> optionalBook) throws BookNotFoundException {
-        Book book = optionalBook.orElseThrow(() -> new BookNotFoundException("Book not found"));
-        book.setIsbn(bookRequest.getIsbn());
-        book.setTitre(bookRequest.getTitre());
-        book.setDatePublication(bookRequest.getDatePublication());
-        book.setSynopsis(bookRequest.getSynopsis());
-        return book;
+    private Book initialiseBook(Long id, BookRequest bookRequest) throws BookNotFoundException {
+        return bookRepository.findById(id)
+                .map(book -> {
+                    book.setIsbn(bookRequest.getIsbn());
+                    book.setTitre(bookRequest.getTitre());
+                    book.setDatePublication(bookRequest.getDatePublication());
+                    book.setSynopsis(bookRequest.getSynopsis());
+                    return book;
+                })
+                .orElseThrow(() -> new BookNotFoundException("Book not found with ID : " + id));
     }
 
     // GET
@@ -89,7 +94,7 @@ public class BookService {
         if (!books.isEmpty()) {
             return books.stream()
                     .map(BookMapper::convertToBookDTO)
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             throw new BookNotFoundException("Book not found");
         }
