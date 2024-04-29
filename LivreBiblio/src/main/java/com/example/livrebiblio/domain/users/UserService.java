@@ -1,7 +1,10 @@
 package com.example.livrebiblio.domain.users;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -67,5 +70,29 @@ public class UserService {
                     return users;
                 })
                 .orElseThrow(() -> new UserNotFoundException("Users not found with ID : " + id));
+    }
+
+    // SEARCH
+
+    public List<UserDTO> search(UserFilters userFilters) throws UserNotFoundException {
+        Specification<Users> specification = buildSpecification(userFilters);
+        List<Users> users = userRepository.findAll(specification);
+
+        if (!users.isEmpty()) {
+            return users.stream()
+                    .map(UserMapper::convertToUserDTO)
+                    .toList();
+        } else {
+            throw new UserNotFoundException("User not found");
+        }
+    }
+
+    public Specification<Users> buildSpecification(UserFilters userFilters) {
+        return UserSpecificationBuilder.builder()
+                .withName(userFilters.getName())
+                .withSurname(userFilters.getSurname())
+                .withRegistration(userFilters.getRegistration())
+                .withBorrowing(userFilters.getBorrowing())
+                .build();
     }
 }
