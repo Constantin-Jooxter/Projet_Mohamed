@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -13,16 +14,20 @@ public class UserService {
 
     // GET
 
-    public UserDTO getUserByID(Long id) throws UserNotFoundException {
-        return userRepository.findById(id)
+
+    public UserDTO getUserDTOByID(Long id) throws UserNotFoundException {
+        return getUserByID(id)
                 .map(UserMapper::convertToUserDTO)
                 .orElseThrow(() -> new UserNotFoundException("Users not found with ID : " + id));
     }
 
+    public Optional<User> getUserByID(Long id) throws UserNotFoundException {
+        return userRepository.findById(id);
+    }
     // DELETE
 
     public void deleteUserByID(Long id) throws UserNotFoundException {
-        Users UserEntity = userRepository.findById(id)
+        User UserEntity = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Users not found with ID : " + id));
         userRepository.delete(UserEntity);
     }
@@ -30,14 +35,14 @@ public class UserService {
     // CREATE
 
     public UserDTO createUsers(UserRequest userRequest) {
-        Users users = createUserFromRequest(userRequest);
-        Users savedUsers = userRepository.save(users);
+        User users = createUserFromRequest(userRequest);
+        User savedUsers = userRepository.save(users);
 
         return UserMapper.convertToUserDTO(savedUsers);
     }
 
-    private Users createUserFromRequest(UserRequest userRequest) {
-        Users users = new Users();
+    private User createUserFromRequest(UserRequest userRequest) {
+        User users = new User();
 
         users.setName(userRequest.getName());
         users.setSurname(userRequest.getSurname());
@@ -52,14 +57,14 @@ public class UserService {
     // PUT
 
     public UserRequest updateUser(Long id, UserRequest userRequest) throws UserNotFoundException {
-        Users users = initialiseUser(id, userRequest);
+        User users = initialiseUser(id, userRequest);
 
         userRepository.save(users);
 
         return userRequest;
     }
 
-    private Users initialiseUser(Long id, UserRequest userRequest) throws UserNotFoundException {
+    private User initialiseUser(Long id, UserRequest userRequest) throws UserNotFoundException {
         return userRepository.findById(id)
                 .map(users -> {
                     users.setName(userRequest.getName());
@@ -75,8 +80,8 @@ public class UserService {
     // SEARCH
 
     public List<UserDTO> search(UserFilters userFilters) throws UserNotFoundException {
-        Specification<Users> specification = buildSpecification(userFilters);
-        List<Users> users = userRepository.findAll(specification);
+        Specification<User> specification = buildSpecification(userFilters);
+        List<User> users = userRepository.findAll(specification);
 
         if (!users.isEmpty()) {
             return users.stream()
@@ -87,7 +92,7 @@ public class UserService {
         }
     }
 
-    public Specification<Users> buildSpecification(UserFilters userFilters) {
+    public Specification<User> buildSpecification(UserFilters userFilters) {
         return UserSpecificationBuilder.builder()
                 .withName(userFilters.getName())
                 .withSurname(userFilters.getSurname())

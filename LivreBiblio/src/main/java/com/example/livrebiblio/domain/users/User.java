@@ -7,13 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Table(name = "\"user\"")
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(nullable = false)
@@ -24,7 +26,7 @@ public class Users {
     private String adress;
     @Column(nullable = false)
     private LocalDate registration;
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDate borrowing;
 
 }

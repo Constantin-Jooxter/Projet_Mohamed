@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -80,12 +81,15 @@ public class BookService {
 
     // GET
 
-    public BookDTO getBookById(Long id) throws BookNotFoundException {
-        return bookRepository.findById(id)
+    public BookDTO getBookByIdDTO(Long id) throws BookNotFoundException {
+        return getBookById(id)
                 .map(BookMapper::convertToBookDTO)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID : " + id));
     }
 
+    public Optional<Book> getBookById(Long id) {
+        return bookRepository.findById(id);
+    }
 
     public List<BookDTO> search(BookingFilters bookingFilters) throws BookNotFoundException {
         Specification<Book> specification = buildSpecification(bookingFilters);

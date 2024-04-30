@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +33,7 @@ public class BookRepositoryTest {
         // Arrange
         Author author1 = new Author();
         author1.setName("Auteur du book 1");
-        author1.setBirthday(new Date());
+        author1.setBirthday(LocalDate.of(2024, 04, 30));
         author1.setSurname("Anto");
         authorRepository.save(author1);
 
@@ -42,13 +41,13 @@ public class BookRepositoryTest {
         book1.setIsbn("1234567890");
         book1.setTitre("Titre du book 1");
         book1.setAuthor(author1);
-        book1.setDatePublication(Instant.now());
+        book1.setDatePublication(LocalDate.of(2024, 04, 30));
         book1.setSynopsis("TestSynopsis 1");
         bookRepository.save(book1);
 
         Author author2 = new Author();
         author2.setName("Auteur du book 2");
-        author2.setBirthday(new Date());
+        author2.setBirthday(LocalDate.of(2024, 04, 30));
         author2.setSurname("Anto");
         authorRepository.save(author2);
 
@@ -56,7 +55,7 @@ public class BookRepositoryTest {
         book2.setIsbn("0987654321");
         book2.setTitre("Titre du book 2");
         book2.setAuthor(author2);
-        book2.setDatePublication(Instant.now());
+        book2.setDatePublication(LocalDate.of(2024, 04, 30));
         book2.setSynopsis("TestSynopsis 2");
         bookRepository.save(book2);
 

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 public class UserSpecificationBuilder {
-    private Specification<Users> instance;
+    private Specification<User> instance;
 
     private UserSpecificationBuilder() {
         this.instance = Specification.where(null);
@@ -49,7 +49,7 @@ public class UserSpecificationBuilder {
         return this;
     }
 
-    public Specification<Users> build() {
+    public Specification<User> build() {
         return this.instance;
     }
 

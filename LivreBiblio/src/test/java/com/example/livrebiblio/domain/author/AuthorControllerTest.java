@@ -10,8 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
-import java.time.Instant;
+import java.time.LocalDate;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,7 +34,7 @@ public class AuthorControllerTest {
         // Given
         Author author = new Author();
         author.setId(1L);
-        author.setBirthday(Date.from(Instant.now()));
+        author.setBirthday(LocalDate.of(2024, 04, 30));
         author.setName("John Doe");
         author.setSurname("Dirot");
 

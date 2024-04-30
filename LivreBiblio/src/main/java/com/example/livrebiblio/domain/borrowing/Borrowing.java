@@ -2,7 +2,7 @@ package com.example.livrebiblio.domain.borrowing;
 
 
 import com.example.livrebiblio.domain.book.Book;
-import com.example.livrebiblio.domain.users.Users;
+import com.example.livrebiblio.domain.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class Borrowing {
 
     @ManyToOne
     @JoinColumn(name = "fk_users_id")
-    private Users users;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "fk_books_id")

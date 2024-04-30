@@ -43,7 +43,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) throws BookNotFoundException {
-        return ResponseEntity.ok().body(bookService.getBookById(id));
+        return ResponseEntity.ok().body(bookService.getBookByIdDTO(id));
     }
 
     @GetMapping("/search")

@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +33,12 @@ public class BookServiceTest {
     @Test
     void should_create_book_when_bookRequest_is_given() throws AuthorNotFoundException {
         // Arrange
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, "2024-04-25T14:11:02.755Z", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, LocalDate.of(2024, 04, 30), "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setIsbn("1234567890");
         savedBook.setTitre("Titre du book");
         savedBook.setAuthor(null);
-        savedBook.setDatePublication(Instant.parse("2024-04-25T14:11:02.755Z"));
+        savedBook.setDatePublication(LocalDate.of(2024, 04, 30));
         savedBook.setSynopsis("TestSynopsis");
 
         when(bookRepository.save(savedBook)).thenReturn(savedBook);
@@ -90,7 +90,7 @@ public class BookServiceTest {
         Long bookId = 6L;
         Author author = new Author();
         author.setName("test");
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
@@ -118,7 +118,7 @@ public class BookServiceTest {
     void should_throw_BookNotFoundException_when_non_existent_id_is_given_with_update() {
         // Arrange
         long nonExistingBookId = 12L;
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, "1988", "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
 
         when(bookRepository.findById(nonExistingBookId)).thenReturn(Optional.empty());
 
@@ -150,7 +150,7 @@ public class BookServiceTest {
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
         // Act
-        BookDTO result = bookService.getBookById(bookId);
+        BookDTO result = bookService.getBookByIdDTO(bookId);
 
         // Assert
         verify(bookRepository).findById(bookId);
@@ -166,7 +166,7 @@ public class BookServiceTest {
 
         // Act et Assert
         org.junit.jupiter.api.Assertions.assertThrows(BookNotFoundException.class, () ->
-                bookService.getBookById(nonExistingBookId));
+                bookService.getBookByIdDTO(nonExistingBookId));
 
         verify(bookRepository).findById(nonExistingBookId);
     }

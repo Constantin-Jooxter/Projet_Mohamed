@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     @NonNull
-    List<Users> findAll();
+    List<User> findAll();
 
-    List<Users> findAll(Specification<Users> specification);
+    List<User> findAll(Specification<User> specification);
 }

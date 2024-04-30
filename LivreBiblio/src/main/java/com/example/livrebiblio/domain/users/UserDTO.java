@@ -14,7 +14,7 @@ public class UserDTO {
     private LocalDate registrationDate;
     private LocalDate borrowing;
 
-    public UserDTO(Users users) {
+    public UserDTO(User users) {
         this.name = users.getName();
         this.surname = users.getSurname();
         this.adress = users.getAdress();

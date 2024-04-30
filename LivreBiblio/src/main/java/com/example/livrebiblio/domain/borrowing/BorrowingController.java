@@ -22,4 +22,9 @@ public class BorrowingController {
     public ResponseEntity<BorrowingDTO> createAuthor(@RequestBody BorrowingRequest borrowingRequest) throws UserNotFoundException, BookNotFoundException {
         return ResponseEntity.ok().body(borrowingService.createBorrowing(borrowingRequest));
     }
+
+   /* @PutMapping("/{id}")
+    public ResponseEntity<BorrowingRequest> updateBook(@PathVariable Long id, @RequestBody @Valid BorrowingRequest borrowingRequest) throws BookNotFoundException {
+        return ResponseEntity.ok().body(borrowingService.updateBorrowing(id, borrowingRequest));
+    }*/
 }
