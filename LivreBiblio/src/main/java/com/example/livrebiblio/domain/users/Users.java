@@ -24,6 +24,7 @@ public class Users {
     private String adress;
     @Column(nullable = false)
     private LocalDate registration;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate borrowing;
+
 }

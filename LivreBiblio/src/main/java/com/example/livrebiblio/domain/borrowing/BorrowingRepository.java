@@ -1,8 +1,8 @@
-package com.example.livrebiblio.domain.library;
+package com.example.livrebiblio.domain.borrowing;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LibraryRepository extends JpaRepository<Library, Long> {
+public interface BorrowingRepository extends JpaRepository<Borrowing, Long> {
 }
