@@ -101,6 +101,8 @@ public class BorrowingService {
                 .withReturnDate(borrowingFilters.getEnd_date())
                 .withUserName(borrowingFilters.getUserName())
                 .withBookName(borrowingFilters.getBookTitle())
+                .witheBeforeDate(borrowingFilters.getBeforeDate())
+                .witheAfterDate(borrowingFilters.getAfterDate())
                 .build();
     }
 }

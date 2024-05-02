@@ -14,6 +14,10 @@ public class BorrowingFilters {
     private LocalDate start_date;
     @Parameter(name = "end_date", description = "Search by Return Date")
     private LocalDate end_date;
+    @Parameter(name = "beforeDate", description = "Search for borrowings before this date")
+    private LocalDate beforeDate;
+    @Parameter(name = "afterDate", description = "Search for borrowings after this date")
+    private LocalDate afterDate;
     @Parameter(name = "bookTitle", description = "Search by Book Title")
     private String bookTitle;
     @Parameter(name = "userName", description = "Search by User Name")

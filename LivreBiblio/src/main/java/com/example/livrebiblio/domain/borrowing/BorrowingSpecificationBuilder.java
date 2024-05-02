@@ -28,6 +28,22 @@ public class BorrowingSpecificationBuilder {
         return this;
     }
 
+    public BorrowingSpecificationBuilder witheBeforeDate(LocalDate beforeDate) {
+        if (beforeDate != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.lessThanOrEqualTo(root.get("start_date"), beforeDate));
+        }
+        return this;
+    }
+
+    public BorrowingSpecificationBuilder witheAfterDate(LocalDate afterDate) {
+        if (afterDate != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.greaterThanOrEqualTo(root.get("start_date"), afterDate));
+        }
+        return this;
+    }
+
     public BorrowingSpecificationBuilder withReturnDate(LocalDate end_date) {
         if (end_date != null) {
             instance = instance.and((root, query, builder) ->
