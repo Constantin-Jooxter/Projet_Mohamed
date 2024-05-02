@@ -24,7 +24,7 @@ public class Book {
     private String isbn;
 
     @Column(nullable = false)
-    private String titre;
+    private String title;
 
     @Column(nullable = false)
     private LocalDate datePublication;

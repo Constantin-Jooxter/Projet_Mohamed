@@ -36,7 +36,7 @@ public class BookServiceTest {
         BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, LocalDate.of(2024, 04, 30), "TestSynopsis");
         Book savedBook = new Book();
         savedBook.setIsbn("1234567890");
-        savedBook.setTitre("Titre du book");
+        savedBook.setTitle("Titre du book");
         savedBook.setAuthor(null);
         savedBook.setDatePublication(LocalDate.of(2024, 04, 30));
         savedBook.setSynopsis("TestSynopsis");
@@ -47,7 +47,7 @@ public class BookServiceTest {
         BookDTO result = bookService.createBook(bookRequest);
 
         // Assert
-        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitre(), "test", savedBook.getDatePublication(), savedBook.getSynopsis());
+        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitle(), "test", savedBook.getDatePublication(), savedBook.getSynopsis());
         Assertions.assertThat(result).isEqualTo(expectedDTO);
         verify(bookRepository).save(savedBook);
     }
@@ -94,7 +94,7 @@ public class BookServiceTest {
         Book savedBook = new Book();
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
-        savedBook.setTitre("Titre du book");
+        savedBook.setTitle("Titre du book");
         savedBook.setAuthor(author);
         savedBook.setDatePublication(null);
         savedBook.setSynopsis("TestSynopsis");
@@ -142,7 +142,7 @@ public class BookServiceTest {
         Book book = new Book();
         book.setId(bookId);
         book.setIsbn("1234567890");
-        book.setTitre("Titre du book");
+        book.setTitle("Titre du book");
         book.setAuthor(author);
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsis");
@@ -179,7 +179,7 @@ public class BookServiceTest {
         BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "1L", null, "TestSynopsisTest");
         Book book = new Book();
         book.setIsbn("55555");
-        book.setTitre("TestTitre");
+        book.setTitle("TestTitre");
         book.setAuthor(author);
         book.setDatePublication(null);
         book.setSynopsis("TestSynopsisTest");

@@ -39,10 +39,10 @@ public class BookSpecificationBuilder {
     }
 
 
-    public BookSpecificationBuilder withTitre(String titre) {
-        if (titre != null) {
+    public BookSpecificationBuilder withTitle(String title) {
+        if (title != null) {
             instance = instance.and((root, query, builder) ->
-                    builder.equal(root.get("titre"), titre));
+                    builder.equal(root.get("title"), title));
         }
         return this;
     }

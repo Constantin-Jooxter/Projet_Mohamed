@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -31,6 +32,9 @@ class BorrowingServiceTest {
     @Mock
     private BookService bookService;
 
+    @Mock
+    private BorrowingMapper borrowingMapper;
+
     @InjectMocks
     private BorrowingService borrowingService;
 
@@ -40,8 +44,8 @@ class BorrowingServiceTest {
         BorrowingRequest borrowingRequest = new BorrowingRequest();
         borrowingRequest.setUserId(2L);
         borrowingRequest.setBookId(31L);
-        borrowingRequest.setBorrowDate(LocalDate.of(2024, 04, 15));
-        borrowingRequest.setReturnDate(LocalDate.of(2024, 04, 30));
+        borrowingRequest.setStart_date(LocalDate.of(2024, 04, 15));
+        borrowingRequest.setEnd_date(LocalDate.of(2024, 04, 30));
 
         User user = new User();
         user.setId(2L);
@@ -52,12 +56,12 @@ class BorrowingServiceTest {
         expectedBorrowing.setUser(user);
         expectedBorrowing.setBook(book);
         expectedBorrowing.setBorrowingdate(LocalDate.of(2024, 4, 15));
-        expectedBorrowing.setReturndate(LocalDate.of(2024, 4, 30));
+        expectedBorrowing.setEnd_date(LocalDate.of(2024, 4, 30));
 
         when(borrowingRepository.save(expectedBorrowing)).thenReturn(expectedBorrowing);
 
-        when(userService.getUserByID(eq(2L))).thenReturn(user);
-        when(bookService.getBookById(eq(31L))).thenReturn(book);
+        when(userService.getUserByID(eq(2L))).thenReturn(Optional.of(user));
+        when(bookService.getBookById(eq(31L))).thenReturn(Optional.of(book));
 
         // Act
         BorrowingDTO result = borrowingService.createBorrowing(borrowingRequest);
@@ -67,4 +71,26 @@ class BorrowingServiceTest {
 
         Assertions.assertNotNull(result);
     }
+
+  /*  @Test
+    public void testPatchBorrowingReturnDate() throws BorrowingNotFoundException {
+        // Arrange
+        Long borrowingId = 1L;
+        LocalDate newReturnDate = LocalDate.now().plusDays(7);
+        Borrowing borrowing = new Borrowing();
+        Borrowing updatedBorrowing = new Borrowing();
+        updatedBorrowing.setReturndate(newReturnDate);
+
+        when(borrowingRepository.findById(borrowingId)).thenReturn(Optional.of(borrowing));
+        when(borrowingRepository.save(borrowing)).thenReturn(updatedBorrowing);
+
+        BorrowingDTO expectedDTO = new BorrowingDTO(borrowingId, LocalDate.now().plusDays(7), newReturnDate);
+        expectedDTO.setReturnDate(newReturnDate);
+
+        // Act
+        BorrowingDTO actualDTO = borrowingService.patchBorrowingReturnDate(BorrowingRequest);
+
+        // Assert
+        Assertions.assertEquals(expectedDTO.getReturnDate(), actualDTO.getReturnDate());
+    }*/
 }

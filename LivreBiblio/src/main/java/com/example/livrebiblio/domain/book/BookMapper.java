@@ -6,7 +6,7 @@ public class BookMapper {
         String authorName = book.getAuthor() != null ? book.getAuthor().getName() : null;
         return new BookDTO(
                 book.getIsbn(),
-                book.getTitre(),
+                book.getTitle(),
                 authorName,
                 book.getDatePublication(),
                 book.getSynopsis()

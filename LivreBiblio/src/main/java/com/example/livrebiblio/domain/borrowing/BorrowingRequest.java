@@ -12,6 +12,6 @@ import java.time.LocalDate;
 public class BorrowingRequest {
     private Long userId;
     private Long bookId;
-    private LocalDate borrowDate;
-    private LocalDate returnDate;
+    private LocalDate start_date;
+    private LocalDate end_date;
 }

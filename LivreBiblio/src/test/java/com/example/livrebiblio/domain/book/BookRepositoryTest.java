@@ -39,7 +39,7 @@ public class BookRepositoryTest {
 
         Book book1 = new Book();
         book1.setIsbn("1234567890");
-        book1.setTitre("Titre du book 1");
+        book1.setTitle("Titre du book 1");
         book1.setAuthor(author1);
         book1.setDatePublication(LocalDate.of(2024, 04, 30));
         book1.setSynopsis("TestSynopsis 1");
@@ -53,7 +53,7 @@ public class BookRepositoryTest {
 
         Book book2 = new Book();
         book2.setIsbn("0987654321");
-        book2.setTitre("Titre du book 2");
+        book2.setTitle("Titre du book 2");
         book2.setAuthor(author2);
         book2.setDatePublication(LocalDate.of(2024, 04, 30));
         book2.setSynopsis("TestSynopsis 2");

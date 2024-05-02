@@ -12,8 +12,8 @@ public class BookingFilters {
 
     @Parameter(name = "isbn", description = "Search isbn")
     private String isbn;
-    @Parameter(name = "titre", description = "Search titre")
-    private String titre;
+    @Parameter(name = "title", description = "Search title")
+    private String title;
     @Parameter(name = "author", description = "Search author")
     private String author;
     @Parameter(name = "datePublication", description = "Search Date", example = "yyyy-MM-dd")

@@ -28,6 +28,6 @@ public class Borrowing {
     @JoinColumn(name = "fk_books_id")
     private Book book;
 
-    private LocalDate borrowingdate;
-    private LocalDate returndate;
+    private LocalDate start_date;
+    private LocalDate end_date;
 }

@@ -36,7 +36,7 @@ public class BookService {
     private Book createBook(BookRequest bookRequest, Author author) {
         Book book = new Book();
         book.setIsbn(bookRequest.getIsbn());
-        book.setTitre(bookRequest.getTitre());
+        book.setTitle(bookRequest.getTitle());
         book.setDatePublication(bookRequest.getDatePublication());
         book.setSynopsis(bookRequest.getSynopsis());
         book.setAuthor(author);
@@ -71,7 +71,7 @@ public class BookService {
         return bookRepository.findById(id)
                 .map(book -> {
                     book.setIsbn(bookRequest.getIsbn());
-                    book.setTitre(bookRequest.getTitre());
+                    book.setTitle(bookRequest.getTitle());
                     book.setDatePublication(bookRequest.getDatePublication());
                     book.setSynopsis(bookRequest.getSynopsis());
                     return book;
@@ -108,7 +108,7 @@ public class BookService {
 
         return BookSpecificationBuilder.builder()
                 .withIsbn(bookingFilters.getIsbn())
-                .withTitre(bookingFilters.getTitre())
+                .withTitle(bookingFilters.getTitle())
                 .withAuteurName(bookingFilters.getAuthor())
                 .withdatePublication(bookingFilters.getDatePublication())
                 .withSynopsis(bookingFilters.getSynopsis())

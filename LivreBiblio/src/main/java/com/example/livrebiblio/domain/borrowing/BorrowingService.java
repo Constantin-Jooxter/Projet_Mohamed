@@ -7,7 +7,10 @@ import com.example.livrebiblio.domain.users.User;
 import com.example.livrebiblio.domain.users.UserNotFoundException;
 import com.example.livrebiblio.domain.users.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +26,7 @@ public class BorrowingService {
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + borrowingRequest.getUserId() + " not found"));
 
         Book book = bookService.getBookById(borrowingRequest.getBookId())
-                .orElseThrow(() -> new BookNotFoundException("Book not found"));
+                .orElseThrow(() -> new BookNotFoundException("Book with ID " + borrowingRequest.getBookId() + " not found"));
 
         Borrowing borrowing = getBorrowing(borrowingRequest, user, book);
 
@@ -35,35 +38,69 @@ public class BorrowingService {
         Borrowing borrowing = new Borrowing();
         borrowing.setUser(user);
         borrowing.setBook(book);
-        borrowing.setBorrowingdate(borrowingRequest.getBorrowDate());
-        borrowing.setReturndate(borrowingRequest.getReturnDate());
+        borrowing.setStart_date(borrowingRequest.getStart_date());
+        borrowing.setEnd_date(borrowingRequest.getEnd_date());
         return borrowing;
     }
 
 
     // PUT
 
+    public BorrowingDTO patchBorrowingReturnDate(BorrowingRequest borrowingRequest, Long borrowingId) throws BorrowingNotFoundException {
+        Borrowing borrowing = borrowingRepository.findById(borrowingId)
+                .orElseThrow(() -> new BorrowingNotFoundException("Borrowing with ID " + borrowingId + " not found"));
 
-}
+        Borrowing updatedBorrowing = getBorrowing(borrowingRequest, borrowing);
 
+        return BorrowingMapper.convertToDTO(updatedBorrowing);
+    }
 
-
-/*public BorrowingDTO createBorrowing(BorrowingRequest borrowingRequest) throws UserNotFoundException, BookNotFoundException {
-
-        Optional<User> userByID = userService.getUserByID(borrowingRequest.getUserId());
-        Optional<Book> bookById = bookService.getBookById(borrowingRequest.getBookId());
-
-        if (userByID.isPresent()) {
-            if (bookById.isPresent()) {
-                Borrowing borrowing = getBorrowing(borrowingRequest, userByID.get(), bookById.get());
-
-                Borrowing savedBorrowing = borrowingRepository.save(borrowing);
-
-                return BorrowingMapper.convertToDTO(savedBorrowing);
-            } else {
-                throw new BookNotFoundException("Book not found");
-            }
-        } else {
-            throw new UserNotFoundException("User with ID " + borrowingRequest.getUserId() + " not found");
+    private Borrowing getBorrowing(BorrowingRequest borrowingRequest, Borrowing borrowing) {
+        if (borrowing.getEnd_date() != null) {
+            borrowing.setEnd_date(borrowingRequest.getEnd_date());
         }
-    }*/
+        if (borrowing.getStart_date() != null) {
+            borrowing.setStart_date(borrowingRequest.getStart_date());
+        }
+        if (borrowing.getBook() != null) {
+            borrowing.setBook(borrowing.getBook());
+        }
+        if (borrowing.getUser() != null) {
+            borrowing.setUser(borrowing.getUser());
+        }
+
+        return borrowingRepository.save(borrowing);
+    }
+
+    public BorrowingDTO getBorrowingDTO(Long borrowingId) throws BorrowingNotFoundException {
+        return borrowingRepository.findById(borrowingId)
+                .map(BorrowingMapper::convertToDTO)
+                .orElseThrow(() -> new BorrowingNotFoundException("Borrowing with ID " + borrowingId + " not found"));
+    }
+
+    // SEARCH
+
+
+    public List<BorrowingDTO> search(BorrowingFilters borrowingFilters) throws BorrowingNotFoundException {
+        Specification<Borrowing> specification = buildSpecification(borrowingFilters);
+        List<Borrowing> borrowings = borrowingRepository.findAll(specification);
+
+        if (!borrowings.isEmpty()) {
+            return borrowings.stream()
+                    .map(BorrowingMapper::convertToDTO)
+                    .toList();
+        } else {
+            throw new BorrowingNotFoundException("Borrowing not found");
+        }
+    }
+
+    public Specification<Borrowing> buildSpecification(BorrowingFilters borrowingFilters) {
+
+        return BorrowingSpecificationBuilder.builder()
+                .withBorrowingDate(borrowingFilters.getStart_date())
+                .withReturnDate(borrowingFilters.getEnd_date())
+                .withUserName(borrowingFilters.getUserName())
+                .withBookName(borrowingFilters.getBookTitle())
+                .build();
+    }
+}
