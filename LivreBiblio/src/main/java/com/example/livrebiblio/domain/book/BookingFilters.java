@@ -20,6 +20,8 @@ public class BookingFilters {
     private LocalDate datePublication;
     @Parameter(name = "Synopsis", description = "Resume of Story")
     private String synopsis;
+    @Parameter(name = "Type", description = "Give a Type for this book")
+    private String type;
 }
 
 

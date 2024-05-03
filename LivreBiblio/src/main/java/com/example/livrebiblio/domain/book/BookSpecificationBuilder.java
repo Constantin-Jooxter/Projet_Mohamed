@@ -28,7 +28,7 @@ public class BookSpecificationBuilder {
         return this;
     }
 
-    public BookSpecificationBuilder withAuteurName(String authorName) {
+    public BookSpecificationBuilder withAuthorName(String authorName) {
         if (authorName != null) {
             instance = instance.and((root, query, builder) -> {
                 Join<Book, Author> authorJoin = root.join("author", JoinType.INNER);
@@ -51,6 +51,14 @@ public class BookSpecificationBuilder {
         if (synopsis != null) {
             instance = instance.and((root, query, builder) ->
                     builder.equal(root.get("synopsis"), synopsis));
+        }
+        return this;
+    }
+
+    public BookSpecificationBuilder withType(String type) {
+        if (type != null) {
+            instance = instance.and((root, query, builder) ->
+                    builder.equal(root.get("type"), type));
         }
         return this;
     }

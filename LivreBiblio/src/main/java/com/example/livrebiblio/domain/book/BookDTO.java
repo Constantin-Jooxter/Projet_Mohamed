@@ -10,20 +10,22 @@ import java.time.LocalDate;
 public class BookDTO {
     private String isbn;
     private String title;
-    private String auteur;
+    private String author;
     private LocalDate datePublication;
     private String synopsis;
+    private String type;
 
     public BookDTO(Book book) {
         this.isbn = book.getIsbn();
         this.title = book.getTitle();
         if (book.getAuthor() != null) {
-            this.auteur = book.getAuthor().toString();
+            this.author = book.getAuthor().toString();
         } else {
-            this.auteur = null;
+            this.author = null;
         }
         this.datePublication = book.getDatePublication();
         this.synopsis = book.getSynopsis();
+        this.type = book.getType();
     }
 }
 

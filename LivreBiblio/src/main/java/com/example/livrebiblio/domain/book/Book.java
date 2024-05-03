@@ -32,6 +32,9 @@ public class Book {
     @Column(nullable = false)
     private String synopsis;
 
+    @Column(nullable = false)
+    private String type;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;

@@ -22,7 +22,7 @@ public class BookService {
     // POST
 
     public BookDTO createBook(BookRequest bookRequest) throws AuthorNotFoundException {
-        Long authorId = bookRequest.getAuteur();
+        Long authorId = bookRequest.getAuthor();
         return authorRepository.findById(authorId)
                 .map(author -> createBookWithAuthor(bookRequest, author))
                 .orElseThrow(() -> new AuthorNotFoundException("Author not found"));
@@ -39,6 +39,7 @@ public class BookService {
         book.setTitle(bookRequest.getTitle());
         book.setDatePublication(bookRequest.getDatePublication());
         book.setSynopsis(bookRequest.getSynopsis());
+        book.setType(bookRequest.getType());
         book.setAuthor(author);
         return book;
     }
@@ -74,6 +75,7 @@ public class BookService {
                     book.setTitle(bookRequest.getTitle());
                     book.setDatePublication(bookRequest.getDatePublication());
                     book.setSynopsis(bookRequest.getSynopsis());
+                    book.setType(bookRequest.getType());
                     return book;
                 })
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID : " + id));
@@ -109,9 +111,10 @@ public class BookService {
         return BookSpecificationBuilder.builder()
                 .withIsbn(bookingFilters.getIsbn())
                 .withTitle(bookingFilters.getTitle())
-                .withAuteurName(bookingFilters.getAuthor())
+                .withAuthorName(bookingFilters.getAuthor())
                 .withdatePublication(bookingFilters.getDatePublication())
                 .withSynopsis(bookingFilters.getSynopsis())
+                .withType(bookingFilters.getType())
                 .build();
     }
 }

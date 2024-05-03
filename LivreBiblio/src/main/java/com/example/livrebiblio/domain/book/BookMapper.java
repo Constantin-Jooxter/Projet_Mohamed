@@ -9,7 +9,8 @@ public class BookMapper {
                 book.getTitle(),
                 authorName,
                 book.getDatePublication(),
-                book.getSynopsis()
+                book.getSynopsis(),
+                book.getType()
         );
     }
 }
