@@ -23,7 +23,7 @@ public class ReviewService {
     private BookService bookService;
 
 
-    public ReviewDTO createReview(ReviewRequest reviewRequest) throws UserNotFoundException, BookNotFoundException {
+    public ReviewDTO createReview(ReviewRequest reviewRequest) throws UserNotFoundException, BookNotFoundException, ReviewBadRequestException {
         User user = userService.getUserByID(reviewRequest.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + reviewRequest.getUserId() + " not found"));
 
@@ -36,7 +36,10 @@ public class ReviewService {
         return ReviewMapper.convertReviewToDTO(saveReview);
     }
 
-    private static Reviews getReview(ReviewRequest reviewRequest, User user, Book book) {
+    private static Reviews getReview(ReviewRequest reviewRequest, User user, Book book) throws ReviewBadRequestException {
+        if (reviewRequest.getRating() == null || reviewRequest.getComment() == null || reviewRequest.getComment().isEmpty()) {
+            throw new ReviewBadRequestException("Review Rating cannot be null or empty");
+        }
         Reviews review = new Reviews();
         review.setUser(user);
         review.setBook(book);
@@ -50,7 +53,7 @@ public class ReviewService {
     public ReviewDTO getReviewRequest(Long id) throws ReviewNotFoundException {
         return reviewRepository.findById(id)
                 .map(ReviewMapper::convertReviewToDTO)
-                .orElseThrow(() -> new ReviewNotFoundException("Review not found"));
+                .orElseThrow(() -> new ReviewNotFoundException("Review with " + id + " not found"));
     }
 
 

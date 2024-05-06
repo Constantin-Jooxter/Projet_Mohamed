@@ -18,7 +18,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<ReviewDTO> createMyBorrowing(@RequestBody ReviewRequest reviewRequest) throws UserNotFoundException, BookNotFoundException {
+    public ResponseEntity<ReviewDTO> createMyBorrowing(@RequestBody ReviewRequest reviewRequest) throws UserNotFoundException, BookNotFoundException, ReviewBadRequestException {
         return ResponseEntity.ok().body(reviewService.createReview(reviewRequest));
     }
 
