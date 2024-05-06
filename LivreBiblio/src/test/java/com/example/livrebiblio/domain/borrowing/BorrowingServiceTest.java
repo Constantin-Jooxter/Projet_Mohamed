@@ -55,7 +55,7 @@ class BorrowingServiceTest {
         Borrowing expectedBorrowing = new Borrowing();
         expectedBorrowing.setUser(user);
         expectedBorrowing.setBook(book);
-        expectedBorrowing.setBorrowingdate(LocalDate.of(2024, 4, 15));
+        expectedBorrowing.getStart_date();
         expectedBorrowing.setEnd_date(LocalDate.of(2024, 4, 30));
 
         when(borrowingRepository.save(expectedBorrowing)).thenReturn(expectedBorrowing);

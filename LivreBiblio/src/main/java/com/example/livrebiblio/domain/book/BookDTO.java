@@ -15,6 +15,7 @@ public class BookDTO {
     private String synopsis;
     private String type;
 
+
     public BookDTO(Book book) {
         this.isbn = book.getIsbn();
         this.title = book.getTitle();

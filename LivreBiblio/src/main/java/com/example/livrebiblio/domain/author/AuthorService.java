@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -33,19 +34,26 @@ public class AuthorService {
 
 // POST
 
-    public AuthorDTO createAuthor(AuthorRequest authorRequest) {
+    public AuthorDTO createAuthor(AuthorRequest authorRequest) throws AuthorBadRequestException {
         Author author = createAuthorFromRequest(authorRequest);
-        Author savedAuthor = authorRepository.save(author);
-        return createAuthorDTO(savedAuthor);
+        Optional<Author> savedAuthor = Optional.of(authorRepository.save(author));
+        return savedAuthor.map(this::createAuthorDTO)
+                .orElseThrow(() -> new AuthorBadRequestException("Failed to create author"));
     }
 
-    private Author createAuthorFromRequest(AuthorRequest authorRequest) {
+
+    private Author createAuthorFromRequest(AuthorRequest authorRequest) throws AuthorBadRequestException {
+        if (authorRequest.getName() == null || authorRequest.getName().isEmpty() ||
+                authorRequest.getSurname() == null || authorRequest.getSurname().isEmpty()) {
+            throw new AuthorBadRequestException("Name and surname are required");
+        }
         Author author = new Author();
         author.setName(authorRequest.getName());
         author.setSurname(authorRequest.getSurname());
         author.setBirthday(authorRequest.getBirthday());
         return author;
     }
+
 
     private AuthorDTO createAuthorDTO(Author author) {
         return new AuthorDTO(author);
@@ -62,7 +70,7 @@ public class AuthorService {
                     .map(AuthorMapper::convertToAuthorDTO)
                     .collect(Collectors.toList());
         } else {
-            throw new AuthorNotFoundException("Book not found");
+            throw new AuthorNotFoundException("Author not found");
         }
     }
 

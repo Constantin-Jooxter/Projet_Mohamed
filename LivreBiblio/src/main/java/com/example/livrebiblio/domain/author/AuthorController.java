@@ -1,6 +1,7 @@
 package com.example.livrebiblio.domain.author;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class AuthorController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorRequest authorRequest) {
+    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody @Valid AuthorRequest authorRequest) throws AuthorBadRequestException {
         return ResponseEntity.ok().body(authorService.createAuthor(authorRequest));
     }
 

@@ -17,14 +17,20 @@ public class ReviewController {
 
     private ReviewService reviewService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ReviewDTO> createMyBorrowing(@RequestBody ReviewRequest reviewRequest) throws UserNotFoundException, BookNotFoundException {
         return ResponseEntity.ok().body(reviewService.createReview(reviewRequest));
     }
 
-    @GetMapping("/")
-    public ResponseEntity<ReviewDTO> getReviewById(Long reviewId) throws ReviewNotFoundException {
-        return ResponseEntity.ok().body(reviewService.getReviewRequest(reviewId));
+    /*@GetMapping("/{id}")
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) throws ReviewNotFoundException {
+        return ResponseEntity.ok().body(reviewService.getReviewRequest(id));
+    }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) throws ReviewNotFoundException {
+        ReviewDTO reviewDTO = reviewService.getReviewRequest(id);
+        return ResponseEntity.ok(reviewDTO);
     }
 
     @GetMapping("/search")

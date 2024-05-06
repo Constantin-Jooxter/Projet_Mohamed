@@ -41,17 +41,19 @@ public class BookControllerTest {
 
     @Test
     void should_return_OK_and_bookDTO() throws Exception {
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis");
+        LocalDate expectedDate = LocalDate.of(2024, 04, 30);
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
         when(bookService.getBookByIdDTO(1L)).thenReturn(bookDTO);
 
-        mockMvc.perform(get("/books/GetById/1"))
+        mockMvc.perform(get("/books/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isbn").value("1234567890"))
-                .andExpect(jsonPath("$.titre").value("Titre du book"))
-                .andExpect(jsonPath("$.auteur").value("Auteur du book"))
-                .andExpect(jsonPath("$.datePublication").value(LocalDate.of(2024, 04, 30)))
-                .andExpect(jsonPath("$.synopsis").value("TestSynopsis"));
+                .andExpect(jsonPath("$.title").value("Titre du book"))
+                .andExpect(jsonPath("$.author").value("Auteur du book"))
+                .andExpect(jsonPath("$.datePublication").value(expectedDate.toString()))
+                .andExpect(jsonPath("$.synopsis").value("TestSynopsis"))
+                .andExpect(jsonPath("$.type").value("Fantasy"));
 
         Mockito.verify(bookService).getBookByIdDTO(1L);
         log.info(objectMapper.writeValueAsString(bookDTO));
@@ -62,11 +64,12 @@ public class BookControllerTest {
     void should_return_NotFound_and_bookDTO() throws Exception {
         Long id = 10L;
 
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30),
+                "TestSynopsis", "Fantasy");
 
         when(bookService.getBookByIdDTO(Mockito.eq(id))).thenThrow(BookNotFoundException.class);
 
-        mockMvc.perform(get("/books/GetById/{id}", id))
+        mockMvc.perform(get("/books/{id}", id))
                 .andExpect(status().isNotFound());
 
         Mockito.verify(bookService).getBookByIdDTO(id);
@@ -79,11 +82,11 @@ public class BookControllerTest {
     @Test
     void should_return_OK_when_given_good_body_for_post() throws Exception {
         Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis");
-        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
+        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
         when(bookService.createBook(bookingRequest)).thenReturn(bookDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/books/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("/books/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(bookingRequest)))
                 .andDo(print())
@@ -95,15 +98,14 @@ public class BookControllerTest {
 
     @Test
     void should_return_BadRequest_when_given_BadBody_for_post() throws Exception {
-        Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis");
-        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
+        BookRequest bookingRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
 
         when(bookService.createBook(bookingRequest)).thenReturn(bookDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/books/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("/books/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new BookRequest("", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis"))))
+                        .content(objectMapper.writeValueAsString(new BookRequest("", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy"))))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
@@ -116,7 +118,7 @@ public class BookControllerTest {
 
     @Test
     void should_return_OK_when_delete() throws Exception {
-        mockMvc.perform(delete("/books/deleteById/1"))
+        mockMvc.perform(delete("/books/1"))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -127,7 +129,7 @@ public class BookControllerTest {
     void should_return_NotFound_when_delete_with_BadId() throws Exception {
 
         doThrow(BookNotFoundException.class).when(bookService).deleteBook(2L);
-        mockMvc.perform(delete("/books/deleteById/2"))
+        mockMvc.perform(delete("/books/2"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -139,14 +141,14 @@ public class BookControllerTest {
 
     @Test
     void should_return_OK_with_good_body_for_update() throws Exception {
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
 
         when(bookService.updateBook(Mockito.eq(1L), any(BookRequest.class)))
                 .thenReturn(bookRequest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/books/updateById/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/books/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis"))))
+                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy"))))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -157,14 +159,14 @@ public class BookControllerTest {
 
     @Test
     void should_return_NotFound_when_given_Badbody_for_update() throws Exception {
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
         Long bookId = 2L;
 
         when(bookService.updateBook(bookId, bookRequest)).thenThrow(BookNotFoundException.class);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/books/updateById/2")
+        mockMvc.perform(MockMvcRequestBuilders.put("/books/2")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis"))))
+                        .content(objectMapper.writeValueAsString(new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy"))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 

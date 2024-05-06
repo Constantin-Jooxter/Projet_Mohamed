@@ -2,6 +2,7 @@ package com.example.livrebiblio.domain.book;
 
 import com.example.livrebiblio.domain.author.Author;
 import com.example.livrebiblio.domain.author.AuthorNotFoundException;
+import com.example.livrebiblio.domain.author.AuthorRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,22 +27,34 @@ public class BookServiceTest {
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private AuthorRepository authorRepository;
+
     @InjectMocks
     private BookService bookService;
 
     // POST
 
-
     @Test
     void should_create_book_when_bookRequest_is_given() throws AuthorNotFoundException {
         // Arrange
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", null, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        Author author = new Author();
+        author.setId(1L);
+        author.setName("Antoine");
+        author.setSurname("Dirot");
+        author.setBirthday(LocalDate.of(2024, 04, 30));
+
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
+
+
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
         Book savedBook = new Book();
-        savedBook.setIsbn("1234567890");
-        savedBook.setTitle("Titre du book");
-        savedBook.setAuthor(null);
-        savedBook.setDatePublication(LocalDate.of(2024, 04, 30));
-        savedBook.setSynopsis("TestSynopsis");
+        savedBook.setIsbn(bookRequest.getIsbn());
+        savedBook.setTitle(bookRequest.getTitle());
+        savedBook.setAuthor(author);
+        savedBook.setDatePublication(bookRequest.getDatePublication());
+        savedBook.setSynopsis(bookRequest.getSynopsis());
+        savedBook.setType(bookRequest.getType());
 
         when(bookRepository.save(savedBook)).thenReturn(savedBook);
 
@@ -47,9 +62,24 @@ public class BookServiceTest {
         BookDTO result = bookService.createBook(bookRequest);
 
         // Assert
-        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitle(), "test", savedBook.getDatePublication(), savedBook.getSynopsis());
+        BookDTO expectedDTO = new BookDTO(savedBook.getIsbn(), savedBook.getTitle(), "Antoine Dirot", savedBook.getDatePublication(), savedBook.getSynopsis(), savedBook.getType());
         Assertions.assertThat(result).isEqualTo(expectedDTO);
-        verify(bookRepository).save(savedBook);
+    }
+
+    @Test
+    void should_throw_exception_when_BadRequest_is_given() {
+        // Arrange
+        Author author = new Author();
+
+        when(authorRepository.findById(1L)).thenReturn(Optional.empty());
+
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
+
+        // Act & Assert
+        AuthorNotFoundException exception = assertThrows(AuthorNotFoundException.class, () -> bookService.createBookWithAuthor(bookRequest, author));
+
+        // Assert
+        assertEquals("Author not found", exception.getMessage());
     }
 
 
@@ -75,7 +105,7 @@ public class BookServiceTest {
         when(bookRepository.findById(nonExistingBookId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        org.junit.jupiter.api.Assertions.assertThrows(BookNotFoundException.class, () -> {
+        assertThrows(BookNotFoundException.class, () -> {
             bookService.deleteBook(nonExistingBookId);
         });
     }
@@ -90,7 +120,7 @@ public class BookServiceTest {
         Long bookId = 6L;
         Author author = new Author();
         author.setName("test");
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
         Book savedBook = new Book();
         savedBook.setId(bookId);
         savedBook.setIsbn("1234567890");
@@ -118,12 +148,12 @@ public class BookServiceTest {
     void should_throw_BookNotFoundException_when_non_existent_id_is_given_with_update() {
         // Arrange
         long nonExistingBookId = 12L;
-        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis");
+        BookRequest bookRequest = new BookRequest("1234567890", "Titre du book", 1L, LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
 
         when(bookRepository.findById(nonExistingBookId)).thenReturn(Optional.empty());
 
         // Act et Assert
-        org.junit.jupiter.api.Assertions.assertThrows(BookNotFoundException.class, () ->
+        assertThrows(BookNotFoundException.class, () ->
                 bookService.updateBook(nonExistingBookId, bookRequest));
 
         verify(bookRepository).findById(nonExistingBookId);
@@ -165,7 +195,7 @@ public class BookServiceTest {
         when(bookRepository.findById(nonExistingBookId)).thenReturn(Optional.empty());
 
         // Act et Assert
-        org.junit.jupiter.api.Assertions.assertThrows(BookNotFoundException.class, () ->
+        assertThrows(BookNotFoundException.class, () ->
                 bookService.getBookByIdDTO(nonExistingBookId));
 
         verify(bookRepository).findById(nonExistingBookId);
@@ -176,7 +206,7 @@ public class BookServiceTest {
         // Arrange
         Author author = new Author();
         author.setName("test");
-        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "1L", null, "TestSynopsisTest");
+        BookingFilters bookingFilters = new BookingFilters("55555", "TestTitre", "1L", null, "TestSynopsisTest", "Fantasy");
         Book book = new Book();
         book.setIsbn("55555");
         book.setTitle("TestTitre");

@@ -45,6 +45,8 @@ public class ReviewService {
         return review;
     }
 
+    // GET
+
     public ReviewDTO getReviewRequest(Long id) throws ReviewNotFoundException {
         return reviewRepository.findById(id)
                 .map(ReviewMapper::convertReviewToDTO)
