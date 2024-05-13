@@ -7,7 +7,9 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,9 +31,15 @@ public class AuthorController {
     }
 
     @PostMapping("/")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody @Valid AuthorRequest authorRequest) throws AuthorBadRequestException {
-        return ResponseEntity.ok().body(authorService.createAuthor(authorRequest));
+        AuthorDTO authorDTO = authorService.createAuthor(authorRequest);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(authorDTO.getId()).toUri();
+        return ResponseEntity.created(location).body(authorDTO);
     }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<AuthorDTO>> searchController(@ParameterObject AuthorFilters authorFilters) throws AuthorNotFoundException {

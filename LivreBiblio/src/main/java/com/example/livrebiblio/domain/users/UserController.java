@@ -15,14 +15,14 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) throws UserNotFoundException {
         return ResponseEntity.ok().body(userService.getUserDTOByID(id));
     }
 
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Long id) throws UserNotFoundException {
         userService.deleteUserByID(id);
     }

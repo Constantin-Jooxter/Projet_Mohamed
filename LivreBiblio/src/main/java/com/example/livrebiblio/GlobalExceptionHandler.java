@@ -4,6 +4,7 @@ import com.example.livrebiblio.domain.author.AuthorBadRequestException;
 import com.example.livrebiblio.domain.author.AuthorNotFoundException;
 import com.example.livrebiblio.domain.book.BookBadRequestException;
 import com.example.livrebiblio.domain.book.BookNotFoundException;
+import com.example.livrebiblio.domain.borrowing.BookAlreadyBorrowedException;
 import com.example.livrebiblio.domain.borrowing.BorrowingBadRequestException;
 import com.example.livrebiblio.domain.borrowing.BorrowingNotFoundException;
 import com.example.livrebiblio.domain.review.ReviewBadRequestException;
@@ -77,6 +78,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BorrowingBadRequestException.class)
     public ResponseEntity<String> handleBorrowingBadRequestExceptionAuthor(BorrowingBadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookAlreadyBorrowedException.class)
+    public ResponseEntity<String> handleBorrowingBadRequestExceptionBookAlreadyTaken(BookAlreadyBorrowedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }

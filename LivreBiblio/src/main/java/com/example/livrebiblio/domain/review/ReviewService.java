@@ -37,7 +37,7 @@ public class ReviewService {
     }
 
     private static Reviews getReview(ReviewRequest reviewRequest, User user, Book book) throws ReviewBadRequestException {
-        if (reviewRequest.getRating() == null || reviewRequest.getComment() == null || reviewRequest.getComment().isEmpty()) {
+        if (reviewRequest.getRating() == null || reviewRequest.getRating().describeConstable().isEmpty()) {
             throw new ReviewBadRequestException("Review Rating cannot be null or empty");
         }
         Reviews review = new Reviews();

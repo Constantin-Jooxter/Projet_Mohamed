@@ -8,12 +8,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,25 +55,97 @@ public class AuthorControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void should_return_KO_when_given_non_existing_id() throws Exception {
+        Author author = new Author();
+        author.setId(99L);
+        author.setBirthday(LocalDate.of(2024, 04, 30));
+        author.setName("John Doe");
+        author.setSurname("Dirot");
 
+        when(authorService.getAuthorById(99L)).thenThrow(new AuthorNotFoundException("Author not found"));
 
-/*    @Test
-    void should_return_OK_and_bookDTO() throws Exception {
-        Instant datePublication = Instant.parse("2024-04-22T11:30:03Z");
-        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Auteur du book", datePublication, "TestSynopsis");
-        when(bookService.getBookById(1L)).thenReturn(bookDTO);
-
-        mockMvc.perform(get("/books/GetById/1"))
+        // When/Then
+        mockMvc.perform(get("/author/99"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isbn").value("1234567890"))
-                .andExpect(jsonPath("$.titre").value("Titre du book"))
-                .andExpect(jsonPath("$.auteur").value("Auteur du book"))
-                .andExpect(jsonPath("$.datePublication").value(datePublication.toString()))
-                .andExpect(jsonPath("$.synopsis").value("TestSynopsis"));
+                .andExpect(status().isNotFound());
+    }
 
-        Mockito.verify(bookService).getBookById(1L);
-        log.info(objectMapper.writeValueAsString(bookDTO));
-    }*/
+    @Test
+    void should_delete_when_given_existing_id() throws Exception {
+        // ARRANGE
+        Long deleteId = 1L;
+
+        // ACT
+        mockMvc.perform(delete("/author/" + deleteId))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        // ASSERT
+        verify(authorService).deleteAuthorById(1L);
+    }
+
+    @Test
+    void should_return_NotFound_when_given_non_existing_id() throws Exception {
+        // ARRANGE
+        Long deleteId = 99L;
+
+        // ACT
+        doThrow(AuthorNotFoundException.class).when(authorService).deleteAuthorById(deleteId);
+        mockMvc.perform(delete("/author/" + deleteId))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        // ASSERT
+        verify(authorService).deleteAuthorById(99L);
+    }
+
+
+    @Test
+    void should_create_author_when_given_good_request() throws Exception {
+        Author author = new Author();
+        author.setBirthday(LocalDate.of(2024, 04, 30));
+        author.setName("John Doe");
+        author.setSurname("Dirot");
+        AuthorDTO authorDTO = AuthorMapper.convertToAuthorDTO(author);
+
+        AuthorRequest authorRequest = new AuthorRequest();
+        authorRequest.setName("John Doe");
+        authorRequest.setBirthday(LocalDate.of(2024, 04, 30));
+
+        when(authorService.createAuthor(authorRequest)).thenReturn(authorDTO);
+
+        mockMvc.perform(post("/author/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(authorRequest)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        verify(authorService).createAuthor(authorRequest);
+    }
+
+    @Test
+    void should_return_BadRequest_when_given_bad_request() throws Exception {
+        Author author = new Author();
+        author.setBirthday(LocalDate.of(2024, 04, 30));
+        author.setName("John Doe");
+        author.setSurname("");
+        AuthorDTO authorDTO = AuthorMapper.convertToAuthorDTO(author);
+
+        AuthorRequest authorRequest = new AuthorRequest();
+        authorRequest.setName("jkihijk");
+        authorRequest.setSurname("Lala");
+        authorRequest.setBirthday(LocalDate.of(2024, 04, 30));
+
+        when(authorService.createAuthor(authorRequest)).thenThrow(new AuthorBadRequestException("Failed to create author"));
+
+        mockMvc.perform(post("/author/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(authorRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        verify(authorService).createAuthor(authorRequest);
+    }
 
 }

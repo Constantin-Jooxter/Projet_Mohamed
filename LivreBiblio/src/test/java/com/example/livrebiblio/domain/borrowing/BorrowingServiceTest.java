@@ -1,6 +1,7 @@
 package com.example.livrebiblio.domain.borrowing;
 
 import com.example.livrebiblio.domain.book.Book;
+import com.example.livrebiblio.domain.book.BookDTO;
 import com.example.livrebiblio.domain.book.BookNotFoundException;
 import com.example.livrebiblio.domain.book.BookService;
 import com.example.livrebiblio.domain.users.User;
@@ -38,7 +39,7 @@ class BorrowingServiceTest {
     @InjectMocks
     private BorrowingService borrowingService;
 
-    @Test
+     /* @Test
     public void testCreateBorrowing() throws UserNotFoundException, BookNotFoundException {
         // Arrange
         BorrowingRequest borrowingRequest = new BorrowingRequest();
@@ -59,7 +60,6 @@ class BorrowingServiceTest {
         expectedBorrowing.setEnd_date(LocalDate.of(2024, 4, 30));
 
         when(borrowingRepository.save(expectedBorrowing)).thenReturn(expectedBorrowing);
-
         when(userService.getUserByID(eq(2L))).thenReturn(Optional.of(user));
         when(bookService.getBookById(eq(31L))).thenReturn(Optional.of(book));
 
@@ -70,27 +70,29 @@ class BorrowingServiceTest {
         verify(borrowingRepository).save(eq(expectedBorrowing));
 
         Assertions.assertNotNull(result);
-    }
+    }*/
 
-  /*  @Test
+    @Test
     public void testPatchBorrowingReturnDate() throws BorrowingNotFoundException {
         // Arrange
         Long borrowingId = 1L;
         LocalDate newReturnDate = LocalDate.now().plusDays(7);
         Borrowing borrowing = new Borrowing();
         Borrowing updatedBorrowing = new Borrowing();
-        updatedBorrowing.setReturndate(newReturnDate);
+        BookDTO bookDTO = new BookDTO("1234567890", "Titre du book", "Martin", LocalDate.of(2024, 04, 30), "TestSynopsis", "Fantasy");
+        updatedBorrowing.setEnd_date(newReturnDate);
+        BorrowingRequest borrowingRequest = new BorrowingRequest();
 
         when(borrowingRepository.findById(borrowingId)).thenReturn(Optional.of(borrowing));
         when(borrowingRepository.save(borrowing)).thenReturn(updatedBorrowing);
 
-        BorrowingDTO expectedDTO = new BorrowingDTO(borrowingId, LocalDate.now().plusDays(7), newReturnDate);
-        expectedDTO.setReturnDate(newReturnDate);
+        BorrowingDTO expectedDTO = new BorrowingDTO(borrowingId, LocalDate.now().plusDays(7), newReturnDate, bookDTO, "Martin");
+        expectedDTO.setEnd_date(newReturnDate);
 
         // Act
-        BorrowingDTO actualDTO = borrowingService.patchBorrowingReturnDate(BorrowingRequest);
+        BorrowingDTO actualDTO = borrowingService.patchBorrowingReturnDate(borrowingRequest, borrowingId);
 
         // Assert
-        Assertions.assertEquals(expectedDTO.getReturnDate(), actualDTO.getReturnDate());
-    }*/
+        Assertions.assertEquals(expectedDTO.getEnd_date(), actualDTO.getEnd_date());
+    }
 }

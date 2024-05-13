@@ -10,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,12 +23,16 @@ public class BorrowingService {
     private BookService bookService;
 
 
-    public BorrowingDTO createBorrowing(BorrowingRequest borrowingRequest) throws UserNotFoundException, BookNotFoundException {
+    public BorrowingDTO createBorrowing(BorrowingRequest borrowingRequest) throws UserNotFoundException, BookNotFoundException, BookAlreadyBorrowedException {
         User user = userService.getUserByID(borrowingRequest.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + borrowingRequest.getUserId() + " not found"));
 
         Book book = bookService.getBookById(borrowingRequest.getBookId())
                 .orElseThrow(() -> new BookNotFoundException("Book with ID " + borrowingRequest.getBookId() + " not found"));
+
+        if (isBookAlreadyBorrowed(book.getId()) && isBorrowedEndDate(borrowingRequest.getEnd_date())) {
+            throw new BookAlreadyBorrowedException("Book with ID " + book.getId() + " is already borrowed until this date : " + borrowingRequest.getEnd_date());
+        }
 
         Borrowing borrowing = getBorrowing(borrowingRequest, user, book);
 
@@ -41,6 +47,14 @@ public class BorrowingService {
         borrowing.setStart_date(borrowingRequest.getStart_date());
         borrowing.setEnd_date(borrowingRequest.getEnd_date());
         return borrowing;
+    }
+
+    private boolean isBookAlreadyBorrowed(Long bookId) {
+        return borrowingRepository.existsByBookId(bookId);
+    }
+
+    private boolean isBorrowedEndDate(LocalDate end_date) {
+        return borrowingRepository.existsByEnd_date(end_date);
     }
 
 

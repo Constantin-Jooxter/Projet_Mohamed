@@ -18,7 +18,7 @@ public class BorrowingController {
     private final BorrowingRepository borrowingRepository;
 
     @PostMapping("/")
-    public ResponseEntity<BorrowingDTO> createMyBorrowing(@RequestBody BorrowingRequest borrowingRequest) throws UserNotFoundException, BookNotFoundException {
+    public ResponseEntity<BorrowingDTO> createMyBorrowing(@RequestBody BorrowingRequest borrowingRequest) throws UserNotFoundException, BookNotFoundException, BookAlreadyBorrowedException {
         return ResponseEntity.ok().body(borrowingService.createBorrowing(borrowingRequest));
     }
 
